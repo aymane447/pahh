@@ -1,0 +1,204 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ajouter un utilisateur{% endblock %}
+
+{% block stylesheets %}
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<style>
+/* ===== BASE ===== */
+body {
+    background: #f0f4f8;
+    font-family: 'Inter', sans-serif;
+    color: #1e293b;
+    margin: 0;
+    padding: 0;
+}
+
+/* ===== WRAPPER ===== */
+.page-wrapper {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px;
+}
+
+/* ===== FORM CARD ===== */
+.form-box {
+    background: #ffffff;
+    max-width: 600px;
+    width: 100%;
+    border-radius: 16px;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.1);
+    padding: 48px 40px;
+    transition: box-shadow 0.3s ease;
+}
+
+.form-box:hover {
+    box-shadow: 0 16px 40px rgba(0,0,0,0.15);
+}
+
+/* ===== HEADER ===== */
+.form-header {
+    margin-bottom: 32px;
+    border-bottom: 2px solid #e2e8f0;
+    padding-bottom: 20px;
+}
+
+.form-header h1 {
+    font-weight: 600;
+    font-size: 2rem;
+    color: #2563eb;
+    margin-bottom: 6px;
+}
+
+.form-header p {
+    font-weight: 400;
+    font-size: 1rem;
+    color: #64748b;
+}
+
+/* ===== FORM ELEMENTS ===== */
+.custom-form label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: #334155;
+    font-size: 0.95rem;
+}
+
+.custom-form input,
+.custom-form select,
+.custom-form textarea {
+    width: 100%;
+    padding: 14px 16px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    border: 1.5px solid #cbd5e1;
+    font-size: 1rem;
+    color: #1e293b;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    font-family: 'Inter', sans-serif;
+}
+
+.custom-form input::placeholder,
+.custom-form textarea::placeholder {
+    color: #94a3b8;
+}
+
+.custom-form input:focus,
+.custom-form select:focus,
+.custom-form textarea:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 6px rgba(37, 99, 235, 0.5);
+    outline: none;
+}
+
+/* ===== ERROR MESSAGES ===== */
+.custom-form ul {
+    margin-top: -12px;
+    margin-bottom: 20px;
+    padding-left: 18px;
+    color: #dc2626;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+/* ===== FORM ACTIONS ===== */
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 20px;
+    margin-top: 12px;
+}
+
+/* ===== BUTTONS ===== */
+.btn-primary {
+    background: linear-gradient(135deg, #2563eb, #3b82f6);
+    border: none;
+    padding: 14px 32px;
+    border-radius: 12px;
+    color: white;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    box-shadow: 0 6px 12px rgba(37, 99, 235, 0.4);
+    transition: background 0.3s ease, box-shadow 0.3s ease;
+    font-family: 'Inter', sans-serif;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #1e40af, #2563eb);
+    box-shadow: 0 8px 20px rgba(37, 99, 235, 0.6);
+}
+
+.btn-secondary {
+    background: transparent;
+    border: 2px solid #64748b;
+    padding: 12px 28px;
+    border-radius: 12px;
+    color: #64748b;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.3s ease, color 0.3s ease;
+    font-family: 'Inter', sans-serif;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-secondary:hover {
+    background: #64748b;
+    color: white;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 640px) {
+    .form-box {
+        padding: 32px 24px;
+    }
+    .form-actions {
+        flex-direction: column;
+        gap: 12px;
+    }
+    .btn-primary,
+    .btn-secondary {
+        width: 100%;
+        text-align: center;
+    }
+}
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="page-wrapper">
+    <div class="form-box">
+
+        <div class="form-header">
+            <h1>Ajouter un utilisateur</h1>
+            <p>Renseignez les informations ci-dessous pour créer un nouvel utilisateur.</p>
+        </div>
+
+        {{ form_start(form, {'attr': {'class': 'custom-form'}}) }}
+
+            {{ form_errors(form) }}
+
+            {{ form_widget(form) }}
+
+            <div class="form-actions">
+                <button type="submit" class="btn-primary">
+                    Ajouter l’utilisateur
+                </button>
+
+                <a href="{{ path('app_tick') }}" class="btn-secondary">
+                    ← Retour à la liste
+                </a>
+            </div>
+
+        {{ form_end(form) }}
+
+    </div>
+</div>
+{% endblock %}

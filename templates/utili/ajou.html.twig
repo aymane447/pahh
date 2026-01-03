@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+{% block title %}Ajouter un utilisateur{% endblock %}
+
+{% block body %}
+    <h1>Ajouter un utilisateur</h1>
+{{ form_start(form) }}
+    {{ form_widget(form) }}
+    <button type="submit" class="btn btn-primary">Ajouter</button>
+    <a class="btn btn-secondary" href="{{ path('app_utili') }}">Retour à la liste</a>
+{{ form_end(form) }}
+{% endblock %}

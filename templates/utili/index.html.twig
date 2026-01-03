@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello UtiliController!{% endblock %}
+
+{% block body %}
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+</style>
+
+
+<div class="example-wrapper">
+    <h1>Liste des Utilisateurs</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nom</th>
+                <th>Email</th>
+                <th>Prénom</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for utili in utilis %}
+            <tr>
+                <td>{{ utili.id }}</td>
+                <td>{{ utili.nom }}</td>
+                <td>{{ utili.email }}</td>
+                 <td>{{ utili.prenom }}</td>
+                <td>
+                    <a href="{{ path('app_utili_sup', {'id': utili.id}) }}" style="color: red;" class="btn btn-danger" onclick="return confirm('Voulez-vous vraiment supprimer ce chercheur ?');">Supprimer</a>
+                    <a href="{{ path('app_utili_mod', {'id': utili.id}) }}" class="btn btn-primary">Modifier</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">Aucun utilisateur trouvé</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_utili_ajou') }}" class="btn btn-success">Ajouter un nouvel utilisateur</a>
+
+</div>
+{% endblock %}

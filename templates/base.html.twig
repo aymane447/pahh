@@ -1,17 +1,79 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
-        {% block stylesheets %}
-        {% endblock %}
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Welcome!{% endblock %}</title>
 
-        {% block javascripts %}
-            {% block importmap %}{{ importmap('app') }}{% endblock %}
-        {% endblock %}
-    </head>
-    <body>
-        {% block body %}{% endblock %}
-    </body>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
+
+    {% block stylesheets %}{% endblock %}
+    {% block javascripts %}
+        {% block importmap %}{{ importmap('app') }}{% endblock %}
+    {% endblock %}
+
+    <style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 70px; 
+        width: 100%;
+        padding: 0 8%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        backdrop-filter: blur(10px);
+        background: rgba(2,6,23,0.85);
+        z-index: 1000;
+    }
+
+    nav h2 {
+        color: #38bdf8;
+    }
+
+    nav a {
+        color: white;
+        margin-left: 25px;
+        text-decoration: none;
+        transition: color 0.3s;
+    }
+
+    nav a:hover {
+        color: #38bdf8;
+    }
+
+    /* ===== MAIN CONTENT ===== */
+    .main-content {
+        padding-top: 100px; /* navbar (70px) + espace */
+        min-height: 100vh;
+    }
+    </style>
+</head>
+
+<body>
+
+<nav>
+    <h2>Ticket<span style="color:#fff">Flow</span></h2>
+    <div>
+        <a href="{{ path('app_home') }}">Home</a>
+        <a href="{{ path('app_tick') }}">Ticket</a>
+        <a href="{{ path('app_client') }}">Client</a>
+        <a href="{{ path('app_mess') }}">Message</a>
+        <a href="{{ path('app_agent') }}">Agent</a>
+        <a href="{{ path('app_cate') }}">Categorie</a>
+    </div>
+</nav>
+
+<div class="main-content">
+    {% block body %}{% endblock %}
+</div>
+
+</body>
 </html>

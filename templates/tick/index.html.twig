@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des tickets{% endblock %}
+
+{% block stylesheets %}
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ asset('scc/pg1.css') }}">
+
+{% endblock %}
+
+{% block body %}
+<div class="page-wrapper">
+    <h1>Liste des Tickets</h1>
+
+    <table class="table" role="table" aria-label="Liste des tickets">
+        <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Titre</th>
+                <th scope="col">Description</th>
+                <th scope="col">Priorité</th>
+                <th scope="col" style="min-width: 180px;">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for tickets in ticket %}
+            <tr>
+                <td data-label="ID">{{ tickets.id }}</td>
+                <td data-label="Titre">{{ tickets.titre }}</td>
+                <td data-label="Description">{{ tickets.description|slice(0, 40) ~ (tickets.description|length > 40 ? '...' : '') }}</td>
+                <td data-label="Priorité">{{ tickets.priorite }}</td>
+                <td data-label="Actions">
+                    <a href="{{ path('app_tick_sup', {'id': tickets.id}) }}" class="btn btn-danger" onclick="return confirm('Voulez-vous vraiment supprimer ce ticket ?');">Supprimer</a>
+                    <a href="{{ path('app_tick_mod', {'id': tickets.id}) }}" class="btn btn-primary">Modifier</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5" style="text-align:center; padding: 20px; color: #64748b;">Aucun ticket trouvé</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_tick_ajou') }}" class="btn btn-success">Ajouter un nouveau ticket</a>
+</div>
+{% endblock %}

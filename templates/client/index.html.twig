@@ -1,0 +1,231 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des Clients{% endblock %}
+
+{% block stylesheets %}
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<style>
+/* ===== BACKGROUND & OVERLAY ===== */
+body {
+    background-color: rgba(2,6,23,0.85);
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    position: relative;
+    min-height: 100vh;
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    color: white;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    top:0; left:0; right:0; bottom:0;
+    background: rgba(0,0,0,0.5);
+    z-index: -1;
+}
+
+/* ===== CONTENT BOX ===== */
+.page-wrapper {
+    max-width: 1000px;
+    margin: 60px auto;
+    background: rgba(255,255,255,0.95);
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+    color: #1e293b;
+}
+
+/* ===== HEADER ===== */
+h1 {
+    font-weight: 700;
+    font-size: 2rem;
+    color: #2563eb;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+/* ===== TABLE ===== */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 1rem;
+    color: #334155;
+}
+
+.table thead {
+    background: #e0e7ff;
+    color: #2563eb;
+    font-weight: 600;
+}
+
+.table thead th {
+    padding: 14px 20px;
+    text-align: left;
+    border-bottom: 2px solid #c7d2fe;
+}
+
+.table tbody tr {
+    border-bottom: 1.5px solid #e2e8f0;
+    transition: background-color 0.25s ease;
+}
+
+.table tbody tr:hover {
+    background-color: #f1f5f9;
+}
+
+.table tbody td {
+    padding: 14px 20px;
+}
+
+/* ===== BUTTONS ===== */
+.btn {
+    font-weight: 600;
+    font-size: 0.95rem;
+    padding: 8px 18px;
+    border-radius: 12px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.btn-primary {
+    background-color: #2563eb;
+    color: white;
+    border: none;
+    box-shadow: 0 6px 12px rgba(37,99,235,0.4);
+}
+
+.btn-primary:hover {
+    background-color: #1d4ed8;
+    box-shadow: 0 8px 20px rgba(37,99,235,0.6);
+}
+
+.btn-danger {
+    background-color: #dc2626;
+    color: white;
+    border: none;
+    box-shadow: 0 6px 12px rgba(220,38,38,0.4);
+}
+
+.btn-danger:hover {
+    background-color: #b91c1c;
+    box-shadow: 0 8px 20px rgba(220,38,38,0.6);
+}
+
+.btn-success {
+    background-color: #16a34a;
+    color: white;
+    border: none;
+    box-shadow: 0 6px 12px rgba(22,163,74,0.4);
+    margin-top: 30px;
+    padding: 12px 30px;
+    display: block;
+    width: fit-content;
+    margin-left: auto;
+}
+
+.btn-success:hover {
+    background-color: #15803d;
+    box-shadow: 0 8px 20px rgba(22,163,74,0.6);
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+    .page-wrapper {
+        margin: 30px 16px;
+        padding: 24px 20px;
+    }
+
+    .table thead {
+        display: none;
+    }
+
+    .table tbody tr {
+        display: block;
+        margin-bottom: 20px;
+        border-bottom: 2px solid #cbd5e1;
+        padding: 12px;
+        box-shadow: 0 0 8px rgba(0,0,0,0.05);
+        border-radius: 12px;
+        background: white;
+    }
+
+    .table tbody td {
+        display: flex;
+        justify-content: space-between;
+        padding: 8px 0;
+        font-size: 0.9rem;
+        border: none;
+    }
+
+    .table tbody td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: #64748b;
+        flex-basis: 40%;
+        text-align: left;
+    }
+
+    .table tbody td:last-child {
+        justify-content: flex-start;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    .btn {
+        font-size: 0.85rem;
+        padding: 8px 14px;
+    }
+
+    .btn-success {
+        width: 100%;
+        text-align: center;
+        margin-left: 0;
+    }
+}
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="page-wrapper">
+    <h1>Liste des Clients</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nom</th>
+                <th>Prénom</th>
+                <th>Email</th>
+                <th>Téléphone</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for me in client %}
+            <tr>
+                <td data-label="ID">{{ me.id }}</td>
+                <td data-label="Nom">{{ me.nom }}</td>
+                <td data-label="Prénom">{{ me.prenom }}</td>
+                <td data-label="Email">{{ me.email }}</td>
+                <td data-label="Téléphone">{{ me.telephone }}</td>
+                <td data-label="Actions">
+                    <a href="{{ path('app_client_mod', {'id': me.id}) }}" class="btn btn-primary">Éditer</a>
+                    <a href="{{ path('app_client_delete', {'id': me.id}) }}" class="btn btn-danger" onclick="return confirm('Voulez-vous vraiment supprimer ce client ?')">Supprimer</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6" style="text-align:center; padding: 20px; color: #64748b;">Aucun client trouvé</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_client_ajou') }}" class="btn btn-success">Ajouter un nouvel utilisateur</a>
+</div>
+{% endblock %}

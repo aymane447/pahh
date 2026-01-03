@@ -1,0 +1,158 @@
+
+
+
+
+{% block body %}
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background: #020617;
+    color: white;
+}
+
+
+
+/* ===== HERO ===== */
+.hero {
+    height: 100vh;
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding: 0 8%;
+    background:
+        linear-gradient(to right, #020617 30%, transparent),
+        url("https://images.unsplash.com/photo-1497032628192-86f99bcd76bc");
+    background-size: cover;
+    background-position: center;
+}
+
+.hero-content {
+    max-width: 600px;
+    animation: slideLeft 1.5s;
+}
+
+.hero h1 {
+    font-size: 3.5em;
+    margin-bottom: 20px;
+}
+
+.hero span {
+    color: #38bdf8;
+}
+
+.hero p {
+    line-height: 1.6;
+    opacity: 0.9;
+}
+
+.hero button {
+    margin-top: 30px;
+    padding: 14px 30px;
+    background: linear-gradient(135deg, #38bdf8, #2563eb);
+    border: none;
+    border-radius: 30px;
+    color: white;
+    font-size: 1em;
+    cursor: pointer;
+    transition: transform 0.3s;
+}
+
+.hero button:hover {
+    transform: scale(1.05);
+}
+
+/* ===== SECTIONS ===== */
+section {
+    padding: 100px 8%;
+}
+
+.section-title {
+    font-size: 2.5em;
+    margin-bottom: 50px;
+    text-align: center;
+}
+
+/* ===== FEATURES ===== */
+.features {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 30px;
+}
+
+.feature {
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(12px);
+    border-radius: 20px;
+    padding: 35px;
+    transition: transform 0.4s, box-shadow 0.4s;
+}
+
+.feature:hover {
+    transform: translateY(-15px);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+}
+
+.feature h3 {
+    color: #38bdf8;
+    margin-bottom: 10px;
+}
+/* ===== ANIMATIONS ===== */
+@keyframes slideLeft {
+    from {opacity: 0; transform: translateX(-50px);}
+    to {opacity: 1; transform: translateX(0);}
+}
+</style>
+</head>
+
+<body>
+
+
+
+<section class="hero" id="home">
+    <div class="hero-content">
+        <h1>Bienvenue Dans  <span>Notre Guichet De ticket</span></h1>
+        <p>
+            Une plateforme digitale élégante et rapide pour découvrir
+            les événements, réserver ses places et vivre des expériences uniques.
+        </p>
+        <button onclick="document.getElementById('concept').scrollIntoView()">
+            <a style="color:white; text-decoration:none;" href="{{ path('app_tick') }}"> Découvrir le concept</a>
+        </button>
+    </div>
+</section>
+
+<section id="concept">
+    <h2 class="section-title">Un guichet intelligent</h2>
+
+    <div class="features">
+        <div class="feature">
+            <h3>🎬 Culture</h3>
+            <p>Cinéma, théâtre et spectacles accessibles en quelques clics.</p>
+        </div>
+
+        <div class="feature">
+            <h3>🎵 Musique</h3>
+            <p>Concerts et festivals réunis sur une seule plateforme.</p>
+        </div>
+
+        <div class="feature">
+            <h3>⚽ Sport</h3>
+            <p>Billets pour les événements sportifs majeurs.</p>
+        </div>
+    </div>
+</section>
+
+
+
+</body>
+{% endblock %}

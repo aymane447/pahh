@@ -20,9 +20,11 @@ RUN composer dump-autoload --optimize --classmap-authoritative
 RUN touch .env
 
 # Install assets and importmap dependencies
-# We need a dummy DATABASE_URL because the kernel boots during these commands
+# We need dummy env vars because the kernel boots during these commands
 ENV DATABASE_URL="postgresql://build:build@127.0.0.1:5432/build"
+ENV DEFAULT_URI="http://localhost"
 RUN php bin/console assets:install public
+
 RUN php bin/console importmap:install
 
 

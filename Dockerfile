@@ -15,6 +15,10 @@ COPY . .
 RUN composer install --optimize-autoloader --no-scripts
 RUN composer dump-autoload --optimize --classmap-authoritative --no-dev
 
+# Create empty .env file to prevent Symfony Dotenv exception
+RUN touch .env
+
+
 ENV APP_ENV=dev
 ENV TRUSTED_PROXIES=*
 

@@ -13,7 +13,8 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 COPY . .
 
 RUN composer install --optimize-autoloader --no-scripts
-RUN composer dump-autoload --optimize --classmap-authoritative --no-dev
+RUN composer dump-autoload --optimize --classmap-authoritative
+
 
 # Create empty .env file to prevent Symfony Dotenv exception
 RUN touch .env

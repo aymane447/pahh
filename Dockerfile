@@ -19,6 +19,11 @@ RUN composer dump-autoload --optimize --classmap-authoritative
 # Create empty .env file to prevent Symfony Dotenv exception
 RUN touch .env
 
+# Install assets and importmap dependencies
+RUN php bin/console assets:install public
+RUN php bin/console importmap:install
+
+
 
 ENV APP_ENV=dev
 ENV TRUSTED_PROXIES=*

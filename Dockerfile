@@ -32,7 +32,7 @@ COPY . .
 ENV COMPOSER_ALLOW_SUPERUSER=1
 RUN composer install --no-dev --optimize-autoloader --no-scripts
 
-# Permissions for var directory (cache/logs)
-RUN chown -R www-data:www-data var
+# Create var directory and set permissions
+RUN mkdir -p var && chown -R www-data:www-data var
 
 EXPOSE 80

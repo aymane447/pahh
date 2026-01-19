@@ -28,11 +28,11 @@ RUN php bin/console assets:install public
 RUN php bin/console importmap:install
 
 
+# Copy startup script
+COPY docker-startup.sh /usr/local/bin/docker-startup
+RUN chmod +x /usr/local/bin/docker-startup
 
 ENV APP_ENV=dev
 ENV TRUSTED_PROXIES=*
 
-# Updated CMD: Attempt migration, but don't crash immediately if it fails (retry logic or just proceed)
-# For now, we use a simple approach: Try migrate, if fail, echo error but start server anyway. 
-# This prevents the "CrashLoopBackOff" if DB is temporarily slow.
-CMD sh -c "php bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration || echo 'Migration failed, starting anyway...' && php -S 0.0.0.0:${PORT:-80} -t public"
+CMD ["/usr/local/bin/docker-startup"]

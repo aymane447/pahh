@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ categorie.id ? 'Modifier' : 'Nouvelle' }} Catégorie - TicketFlow{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div style="max-width: 600px; margin: 0 auto;">
+        <div style="margin-bottom: 30px;">
+            <a href="{{ path('app_cate') }}" style="color: var(--text-muted); text-decoration: none; font-size: 0.9rem; display: flex; align-items: center; gap: 8px;">
+                ← Retour à la liste
+            </a>
+            <h1 style="font-size: 2rem; font-weight: 700; margin-top: 15px;">
+                {{ categorie.id ? 'Modifier la catégorie' : 'Créer une catégorie' }}
+            </h1>
+        </div>
+
+        <div class="card">
+            {{ form_start(form) }}
+                <style>
+                    .form-group { margin-bottom: 20px; }
+                    .form-group label { display: block; margin-bottom: 8px; font-weight: 500; font-size: 0.9rem; }
+                    input, textarea, select { 
+                        width: 100%; padding: 12px; background: rgba(15, 23, 42, 0.6); 
+                        border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 10px; 
+                        color: white; font-size: 1rem; transition: border-color 0.3s;
+                        margin-bottom: 5px;
+                    }
+                    input:focus, textarea:focus, select:focus { outline: none; border-color: var(--primary); }
+                    .btn-submit {
+                        width: 100%; padding: 14px; background: var(--primary); 
+                        border: none; border-radius: 12px; color: white; 
+                        font-weight: 600; cursor: pointer; transition: transform 0.2s;
+                    }
+                </style>
+
+                <div class="form-group">
+                    <label>Nom de la catégorie</label>
+                    {{ form_widget(form.nom, {'attr': {'placeholder': 'Ex: Support Technique'}}) }}
+                </div>
+
+                <div class="form-group">
+                    <label>Code (Optionnel)</label>
+                    {{ form_widget(form.id_categorie, {'attr': {'placeholder': 'Ex: TECH'}}) }}
+                </div>
+
+                <div class="form-group">
+                    <label>Description</label>
+                    {{ form_widget(form.desription, {'attr': {'rows': 4, 'placeholder': 'Détails sur l\'utilité de cette catégorie...'}}) }}
+                </div>
+
+                <button type="submit" class="btn-submit">
+                    {{ categorie.id ? 'Mettre à jour' : 'Créer la catégorie' }}
+                </button>
+            {{ form_end(form) }}
+        </div>
+    </div>
+</div>
+{% endblock %}

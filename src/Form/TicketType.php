@@ -10,29 +10,32 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 class TicketType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('id_ticket')
-            ->add('titre')
-            ->add('description')
-            ->add('priorite')
-            ->add('statut')
-            ->add('date_creation')
-            ->add('date_mise')
-            ->add('id_client', EntityType::class, [
-                'class' => Utilisateur::class,
-                'choice_label' => 'id',
+            ->add('titre', null, [
+                'label' => 'Titre de votre demande',
+                'attr' => ['placeholder' => 'Ex: Problème d\'accès au serveur...']
             ])
-            ->add('id_agent', EntityType::class, [
-                'class' => Utilisateur::class,
-                'choice_label' => 'id',
+            ->add('description', null, [
+                'label' => 'Description détaillée',
+                'attr' => ['rows' => 6, 'placeholder' => 'Décrivez votre problème ici...']
+            ])
+            ->add('priorite', ChoiceType::class, [
+                'choices' => [
+                    'Basse' => 'Basse',
+                    'Moyenne' => 'Moyenne',
+                    'Haute' => 'Haute',
+                ],
+                'label' => 'Priorité'
             ])
             ->add('id_categorie', EntityType::class, [
                 'class' => Categorie::class,
-                'choice_label' => 'id',
+                'choice_label' => 'nom',
+                'label' => 'Catégorie'
             ])
         ;
     }

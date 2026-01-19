@@ -1,0 +1,153 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Dashboard - TicketFlow{% endblock %}
+
+{% block body %}
+<div class="container">
+<style>
+    .dashboard-header {
+        margin-bottom: 40px;
+    }
+    
+    .dashboard-header h1 {
+        font-size: 2.2rem;
+        font-weight: 700;
+        margin-bottom: 8px;
+    }
+    
+    .dashboard-header p {
+        color: var(--text-muted);
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 24px;
+        margin-bottom: 40px;
+    }
+
+    .stat-card {
+        padding: 30px;
+        display: flex;
+        flex-direction: column;
+        transition: transform 0.3s ease;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-5px);
+    }
+
+    .stat-value {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--primary);
+        margin-bottom: 5px;
+    }
+
+    .stat-label {
+        font-size: 0.9rem;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .critical {
+        border-left: 4px solid #ef4444;
+    }
+    
+    .critical .stat-value {
+        color: #ef4444;
+    }
+
+    .actions-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 24px;
+    }
+
+    .action-card h3 {
+        margin-bottom: 15px;
+        color: var(--primary);
+    }
+
+    .btn-action {
+        display: inline-block;
+        margin-top: 15px;
+        padding: 10px 20px;
+        background: var(--primary);
+        color: white;
+        text-decoration: none;
+        border-radius: 8px;
+        font-weight: 500;
+        transition: background 0.3s;
+    }
+
+    .btn-action:hover {
+        background: var(--secondary);
+    }
+</style>
+
+<div class="dashboard-header">
+    <h1>Bonjour, {{ app.user.prenom }} !</h1>
+    <p>Voici un aperçu de vos activités sur TicketFlow.</p>
+</div>
+
+<div class="stats-grid">
+    <div class="card stat-card">
+        <div class="stat-value">{{ total }}</div>
+        <div class="stat-label">Total</div>
+    </div>
+    <div class="card stat-card">
+        <div class="stat-value">{{ open }}</div>
+        <div class="stat-label">Ouverts</div>
+    </div>
+    <div class="card stat-card">
+        <div class="stat-value">{{ in_progress }}</div>
+        <div class="stat-label">En cours</div>
+    </div>
+    <div class="card stat-card">
+        <div class="stat-value">{{ resolved }}</div>
+        <div class="stat-label">Résolus</div>
+    </div>
+    <div class="card stat-card critical">
+        <div class="stat-value">{{ critical }}</div>
+        <div class="stat-label">Haute Priorité</div>
+    </div>
+</div>
+
+<div class="actions-grid">
+    <div class="card">
+        <h3 style="margin-bottom: 20px; color: var(--primary);">Activités Récentes</h3>
+        <div style="display: flex; flex-direction: column; gap: 15px;">
+            {% for t in latest %}
+                <div style="display: flex; align-items: flex-start; gap: 15px; padding-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                    <div style="width: 10px; height: 10px; border-radius: 50%; background: {{ t.statut == 'Ouvert' ? '#4ade80' : (t.statut == 'En cours' ? '#60a5fa' : '#94a3b8') }}; margin-top: 6px;"></div>
+                    <div style="flex: 1;">
+                        <a href="{{ path('app_tick_show', {'id': t.id}) }}" style="color: white; text-decoration: none; font-weight: 500; display: block; margin-bottom: 2px;">{{ t.titre }}</a>
+                        <div style="font-size: 0.8rem; color: var(--text-muted);">Mis à jour le {{ t.dateMise|date('d/m H:i') }} • {{ t.statut }}</div>
+                    </div>
+                </div>
+            {% else %}
+                <p style="color: var(--text-muted); text-align: center; padding: 20px;">Aucune activité récente.</p>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 24px;">
+        <div class="card action-card">
+            <h3>Gestion des Tickets</h3>
+            <p>Consultez la liste complète des dossiers ou créez-en un nouveau.</p>
+            <a href="{{ path('app_tick') }}" class="btn-action">Voir mes tickets</a>
+        </div>
+        
+        {% if is_granted('ROLE_ADMIN') %}
+        <div class="card action-card" style="border-left: 4px solid var(--primary);">
+            <h3>Administration</h3>
+            <p>Gérez les utilisateurs et les catégories.</p>
+            <a href="{{ path('app_utili') }}" class="btn-action" style="background: rgba(56, 189, 248, 0.1); color: var(--primary); border: 1px solid var(--primary);">Panel Admin</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+</div>
+{% endblock %}

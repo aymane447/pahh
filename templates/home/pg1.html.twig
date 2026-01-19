@@ -1,158 +1,417 @@
+{% extends 'base.html.twig' %}
 
+{% block title %}Accueil - TicketFlow{% endblock %}
 
-
+{% block stylesheets %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+{% endblock %}
 
 {% block body %}
 <style>
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Poppins', sans-serif;
-}
+    /* ===== HERO ===== */
+    .hero {
+        height: 85vh;
+        position: relative;
+        display: flex;
+        align-items: center;
+        padding: 0 8%;
+        background: linear-gradient(135deg, rgba(2, 6, 23, 0.9) 30%, rgba(2, 6, 23, 0.3)),
+                    url("https://images.unsplash.com/photo-1557804506-669a67965ba0?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80");
+        background-size: cover;
+        background-position: center;
+    }
 
-html {
-    scroll-behavior: smooth;
-}
+    .hero-content {
+        max-width: 700px;
+        animation: fadeInUp 1s ease-out;
+    }
 
-body {
-    background: #020617;
-    color: white;
-}
+    .hero h1 {
+        font-size: 4rem;
+        font-weight: 800;
+        line-height: 1.1;
+        margin-bottom: 25px;
+    }
 
+    .hero span {
+        background: linear-gradient(to right, #38bdf8, #818cf8);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
 
+    .hero p {
+        font-size: 1.2rem;
+        line-height: 1.8;
+        color: var(--text-muted);
+        margin-bottom: 35px;
+    }
 
-/* ===== HERO ===== */
-.hero {
-    height: 100vh;
-    position: relative;
-    display: flex;
-    align-items: center;
-    padding: 0 8%;
-    background:
-        linear-gradient(to right, #020617 30%, transparent),
-        url("https://images.unsplash.com/photo-1497032628192-86f99bcd76bc");
-    background-size: cover;
-    background-position: center;
-}
+    .btn-hero {
+        padding: 16px 40px;
+        background: linear-gradient(135deg, #38bdf8, #2563eb);
+        border: none;
+        border-radius: 50px;
+        color: white;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        box-shadow: 0 10px 20px rgba(56, 189, 248, 0.3);
+        text-decoration: none;
+        display: inline-block;
+    }
 
-.hero-content {
-    max-width: 600px;
-    animation: slideLeft 1.5s;
-}
+    .btn-hero:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 15px 30px rgba(56, 189, 248, 0.4);
+    }
 
-.hero h1 {
-    font-size: 3.5em;
-    margin-bottom: 20px;
-}
+    /* ===== PARTNERS ===== */
+    .partners-strip {
+        background: rgba(15, 23, 42, 0.4);
+        padding: 30px 8%;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        filter: grayscale(1);
+        opacity: 0.6;
+        gap: 40px;
+        flex-wrap: wrap;
+    }
+    .partner-logo { font-size: 1.5rem; font-weight: 700; color: white; display: flex; align-items: center; gap: 10px; }
 
-.hero span {
-    color: #38bdf8;
-}
+    /* ===== STATS SECTION ===== */
+    .stats-bar {
+        background: rgba(15, 23, 42, 0.8);
+        backdrop-filter: blur(20px);
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        padding: 40px 8%;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        text-align: center;
+        gap: 30px;
+    }
 
-.hero p {
-    line-height: 1.6;
-    opacity: 0.9;
-}
+    .stat-item h2 {
+        font-size: 2.5rem;
+        color: var(--primary);
+        margin-bottom: 5px;
+    }
 
-.hero button {
-    margin-top: 30px;
-    padding: 14px 30px;
-    background: linear-gradient(135deg, #38bdf8, #2563eb);
-    border: none;
-    border-radius: 30px;
-    color: white;
-    font-size: 1em;
-    cursor: pointer;
-    transition: transform 0.3s;
-}
+    .stat-item p {
+        font-size: 0.9rem;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 2px;
+    }
 
-.hero button:hover {
-    transform: scale(1.05);
-}
+    /* ===== WORKFLOW SECTION ===== */
+    .section-padding { padding: 100px 8%; }
+    .text-center { text-align: center; }
+    .section-title { font-size: 2.5rem; font-weight: 700; margin-bottom: 60px; }
 
-/* ===== SECTIONS ===== */
-section {
-    padding: 100px 8%;
-}
+    .workflow-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 40px;
+    }
 
-.section-title {
-    font-size: 2.5em;
-    margin-bottom: 50px;
-    text-align: center;
-}
+    .step-card {
+        background: rgba(255,255,255,0.02);
+        border: 1px solid rgba(255,255,255,0.05);
+        border-radius: 24px;
+        padding: 40px;
+        position: relative;
+        transition: all 0.3s;
+    }
 
-/* ===== FEATURES ===== */
-.features {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 30px;
-}
+    .step-card:hover {
+        background: rgba(255,255,255,0.04);
+        border-color: var(--primary);
+        transform: translateY(-10px);
+    }
 
-.feature {
-    background: rgba(255,255,255,0.05);
-    backdrop-filter: blur(12px);
-    border-radius: 20px;
-    padding: 35px;
-    transition: transform 0.4s, box-shadow 0.4s;
-}
+    .step-icon {
+        width: 60px;
+        height: 60px;
+        background: rgba(56, 189, 248, 0.1);
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        color: var(--primary);
+        margin-bottom: 25px;
+    }
 
-.feature:hover {
-    transform: translateY(-15px);
-    box-shadow: 0 15px 40px rgba(0,0,0,0.5);
-}
+    /* ===== FEATURES GRID ===== */
+    .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 30px;
+    }
+    .feature-item {
+        padding: 30px;
+        background: rgba(255,255,255,0.01);
+        border: 1px solid rgba(255,255,255,0.03);
+        border-radius: 20px;
+        transition: 0.3s;
+    }
+    .feature-item i { font-size: 2rem; color: var(--primary); margin-bottom: 20px; display: block; }
+    .feature-item h3 { margin-bottom: 15px; }
+    .feature-item p { color: var(--text-muted); font-size: 0.9rem; line-height: 1.6; }
 
-.feature h3 {
-    color: #38bdf8;
-    margin-bottom: 10px;
-}
-/* ===== ANIMATIONS ===== */
-@keyframes slideLeft {
-    from {opacity: 0; transform: translateX(-50px);}
-    to {opacity: 1; transform: translateX(0);}
-}
+    /* ===== PRICING ===== */
+    .pricing-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 30px;
+        margin-top: 40px;
+    }
+
+    .pricing-card {
+        background: rgba(255,255,255,0.02);
+        border: 1px solid rgba(255,255,255,0.05);
+        border-radius: 24px;
+        padding: 40px;
+        text-align: center;
+        transition: all 0.3s;
+    }
+
+    .pricing-card.premium {
+        background: rgba(56, 189, 248, 0.05);
+        border-color: var(--primary);
+        transform: scale(1.05);
+        z-index: 10;
+    }
+
+    .price { font-size: 3rem; font-weight: 800; margin: 20px 0; }
+    .price span { font-size: 1rem; color: var(--text-muted); }
+
+    .feature-list { list-style: none; text-align: left; margin: 30px 0; color: var(--text-muted); }
+    .feature-list li { margin-bottom: 12px; display: flex; align-items: center; gap: 10px; }
+    .feature-list i { color: var(--primary); }
+
+    /* ===== FAQ ===== */
+    .faq-container { max-width: 800px; margin: 0 auto; }
+    .faq-item {
+        background: rgba(255,255,255,0.02);
+        border-radius: 12px;
+        margin-bottom: 15px;
+        padding: 20px;
+        cursor: pointer;
+        transition: background 0.3s;
+    }
+    .faq-item:hover { background: rgba(255,255,255,0.04); }
+    .faq-item h4 { display: flex; justify-content: space-between; align-items: center; }
+
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(30px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
 </style>
-</head>
 
-<body>
-
-
-
-<section class="hero" id="home">
+<section class="hero">
     <div class="hero-content">
-        <h1>Bienvenue Dans  <span>Notre Guichet De ticket</span></h1>
+        <h1>Bienvenue Dans <span> Notre Guichet</span></h1>
         <p>
-            Une plateforme digitale élégante et rapide pour découvrir
-            les événements, réserver ses places et vivre des expériences uniques.
+            TicketFlow est la solution de support client nouvelle génération. 
+            Une interface intuitive, une collaboration en temps réel et une résolution optimisée pour vos équipes.
         </p>
-        <button onclick="document.getElementById('concept').scrollIntoView()">
-            <a style="color:white; text-decoration:none;" href="{{ path('app_tick') }}"> Découvrir le concept</a>
-        </button>
-    </div>
-</section>
-
-<section id="concept">
-    <h2 class="section-title">Un guichet intelligent</h2>
-
-    <div class="features">
-        <div class="feature">
-            <h3>🎬 Culture</h3>
-            <p>Cinéma, théâtre et spectacles accessibles en quelques clics.</p>
-        </div>
-
-        <div class="feature">
-            <h3>🎵 Musique</h3>
-            <p>Concerts et festivals réunis sur une seule plateforme.</p>
-        </div>
-
-        <div class="feature">
-            <h3>⚽ Sport</h3>
-            <p>Billets pour les événements sportifs majeurs.</p>
+        <div style="display: flex; gap: 20px;">
+            {% if not app.user or is_granted('ROLE_AGENT') or is_granted('ROLE_ADMIN') %}
+                <a href="{{ path('app_tick_ajou') }}" class="btn-hero">Ouvrir un ticket</a>
+            {% endif %}
+            <a href="#concept" style="color: white; text-decoration: none; display: flex; align-items: center; gap: 10px; font-weight: 500;">
+                <i class="fas fa-play-circle" style="font-size: 2.5rem; color: var(--primary);"></i>
+                Voir le concept
+            </a>
         </div>
     </div>
 </section>
 
+<div class="partners-strip">
+    <div class="partner-logo"><i class="fab fa-apple"></i> TechCorp</div>
+    <div class="partner-logo"><i class="fab fa-microsoft"></i> MicroSoft</div>
+    <div class="partner-logo"><i class="fab fa-google"></i> CloudLink</div>
+    <div class="partner-logo"><i class="fab fa-amazon"></i> PrimeDev</div>
+    <div class="partner-logo"><i class="fab fa-uber"></i> FastMove</div>
+</div>
 
+<div class="stats-bar">
+    <div class="stat-item">
+        <h2>99.9%</h2>
+        <p>Disponibilité</p>
+    </div>
+    <div class="stat-item">
+        <h2>2.5k+</h2>
+        <p>Utilisateurs</p>
+    </div>
+    <div class="stat-item">
+        <h2>15min</h2>
+        <p>Temps de réponse</p>
+    </div>
+    <div class="stat-item">
+        <h2>10k+</h2>
+        <p>Tickets résolus</p>
+    </div>
+</div>
 
-</body>
+<section class="section-padding" id="features">
+    <h2 class="section-title text-center">Des Fonctionnalités qui font la différence</h2>
+    <div class="features-grid">
+        <div class="feature-item">
+            <i class="fas fa-bolt"></i>
+            <h3>Chat Instantané</h3>
+            <p>Communiquez en temps réel avec vos agents pour une résolution ultra-rapide.</p>
+        </div>
+        <div class="feature-item">
+            <i class="fas fa-shield-halved"></i>
+            <h3>Sécurité Avancée</h3>
+            <p>Contrôle d'accès granulaire et protection des données de vos clients.</p>
+        </div>
+        <div class="feature-item">
+            <i class="fas fa-chart-line"></i>
+            <h3>Analytics Détillés</h3>
+            <p>Générez des rapports précis sur la performance de votre support.</p>
+        </div>
+        <div class="feature-item">
+            <i class="fas fa-mobile-screen"></i>
+            <h3>Multi-plateforme</h3>
+            <p>Accédez à vos tickets n'importe où, que ce soit sur mobile ou desktop.</p>
+        </div>
+    </div>
+</section>
+
+<section class="section-padding" id="concept">
+    <h2 class="section-title text-center">Comment ça marche ?</h2>
+    <div class="workflow-grid">
+        <div class="step-card">
+            <div class="step-icon">
+                <i class="fas fa-plus"></i>
+            </div>
+            <h3>Créez votre Ticket</h3>
+            <p>Décrivez votre problème en quelques secondes et joignez les informations nécessaires.</p>
+        </div>
+        <div class="step-card">
+            <div class="step-icon">
+                <i class="fas fa-comments"></i>
+            </div>
+            <h3>Chattez en Direct</h3>
+            <p>Nos agents vous répondent instantanément via notre système de messagerie interne.</p>
+        </div>
+        <div class="step-card">
+            <div class="step-icon">
+                <i class="fas fa-check-double"></i>
+            </div>
+            <h3>Résolution Validée</h3>
+            <p>Une fois le problème réglé, le ticket est clôturé et archivé dans votre historique.</p>
+        </div>
+    </div>
+</section>
+
+<section class="section-padding">
+    <h2 class="section-title text-center">Nos Formules</h2>
+    <div class="pricing-grid">
+        <div class="pricing-card">
+            <h3>Standard</h3>
+            <div class="price">0€<span>/mois</span></div>
+            <ul class="feature-list">
+                <li><i class="fas fa-check"></i> Jusqu'à 5 tickets actifs</li>
+                <li><i class="fas fa-check"></i> Support par chat</li>
+                <li><i class="fas fa-check"></i> Temps de réponse 24h</li>
+            </ul>
+            <a href="{{ path('app_register') }}" class="btn-hero" style="padding: 12px 25px; border-radius: 10px;">Commencer</a>
+        </div>
+        <div class="pricing-card premium">
+            <h4 style="color: var(--primary); text-transform: uppercase; font-size: 0.8rem; letter-spacing: 2px;">Plus Populaire</h4>
+            <h3>Business</h3>
+            <div class="price">29€<span>/mois</span></div>
+            <ul class="feature-list">
+                <li><i class="fas fa-check"></i> Tickets illimités</li>
+                <li><i class="fas fa-check"></i> Priorité Haute garantie</li>
+                <li><i class="fas fa-check"></i> Support dédié 24/7</li>
+                <li><i class="fas fa-check"></i> Statistiques avancées</li>
+            </ul>
+            <a href="{{ path('app_register') }}" class="btn-hero" style="padding: 12px 25px; border-radius: 10px;">Choisir Business</a>
+        </div>
+        <div class="pricing-card">
+            <h3>Enterprise</h3>
+            <div class="price">99€<span>/mois</span></div>
+            <ul class="feature-list">
+                <li><i class="fas fa-check"></i> Multi-utilisateurs</li>
+                <li><i class="fas fa-check"></i> API d'intégration</li>
+                <li><i class="fas fa-check"></i> Hotline prioritaire</li>
+                <li><i class="fas fa-check"></i> SLA personnalisée</li>
+            </ul>
+            <a href="{{ path('app_register') }}" class="btn-hero" style="padding: 12px 25px; border-radius: 10px;">Contactez-nous</a>
+        </div>
+    </div>
+</section>
+
+<section class="section-padding" style="background: rgba(255,255,255,0.01);">
+    <h2 class="section-title text-center">Ils nous font confiance</h2>
+    <div class="testimonial-grid">
+        <div class="testimonial-card">
+            <i class="fas fa-quote-left" style="color: var(--primary); font-size: 1.5rem; margin-bottom: 20px; display: block;"></i>
+            <p>"Le système de chat intégré a radicalement changé notre façon de communiquer avec le support. C'est rapide et efficace."</p>
+            <div class="user-info">
+                <div class="user-img"></div>
+                <div>
+                    <div style="font-weight: 600;">Marc Dubois</div>
+                    <div style="font-size: 0.8rem; color: var(--text-muted);">Directeur IT, Techcorp</div>
+                </div>
+            </div>
+        </div>
+        <div class="testimonial-card">
+            <i class="fas fa-quote-left" style="color: var(--primary); font-size: 1.5rem; margin-bottom: 20px; display: block;"></i>
+            <p>"L'interface glassmorphism est magnifique. On sent que c'est un produit moderne et bien pensé."</p>
+            <div class="user-info">
+                <div class="user-img"></div>
+                <div>
+                    <div style="font-weight: 600;">Sophie Laurent</div>
+                    <div style="font-size: 0.8rem; color: var(--text-muted);">Manager Support, GlobalDev</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section-padding">
+    <h2 class="section-title text-center">Questions Fréquentes</h2>
+    <div class="faq-container">
+        <div class="faq-item">
+            <h4>Quels sont les délais de traitement ? <i class="fas fa-chevron-down"></i></h4>
+            <p style="margin-top: 10px; color: var(--text-muted); font-size: 0.9rem;">Selon votre plan, cela peut varier de 15 minutes à 24 heures.</p>
+        </div>
+        <div class="faq-item">
+            <h4>Puis-je joindre des fichiers à mes tickets ? <i class="fas fa-chevron-down"></i></h4>
+            <p style="margin-top: 10px; color: var(--text-muted); font-size: 0.9rem;">Oui, vous pouvez uploader des photos et documents pour illustrer vos problèmes.</p>
+        </div>
+        <div class="faq-item">
+            <h4>Comment changer mon mot de passe ? <i class="fas fa-chevron-down"></i></h4>
+            <p style="margin-top: 10px; color: var(--text-muted); font-size: 0.9rem;">Rendez-vous dans la section "Profil" en haut à droite pour mettre à jour vos identifiants.</p>
+        </div>
+    </div>
+</section>
+
+<section class="section-padding" style="background: linear-gradient(135deg, rgba(56, 189, 248, 0.1), transparent); border-radius: 40px; margin: 0 8% 100px 8%; text-align: center;">
+    <h2>Prêt à optimiser votre support ?</h2>
+    <p style="margin: 20px 0 40px 0; color: var(--text-muted);">Rejoignez plus de 2 500 entreprises qui font confiance à TicketFlow.</p>
+    <div style="display: flex; justify-content: center; gap: 15px;">
+        <input type="email" placeholder="Votre email..." style="padding: 15px 25px; border-radius: 50px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.3); color: white; width: 300px;">
+        <button class="btn-hero">S'abonner</button>
+    </div>
+</section>
+
+<footer style="padding: 60px 8%; border-top: 1px solid rgba(255,255,255,0.05); text-align: center;">
+    <h2>Ticket<span style="color: var(--primary);">Flow</span></h2>
+    <p style="color: var(--text-muted); margin: 20px 0;">© 2026 TicketFlow System. Tous droits réservés.</p>
+    <div style="display: flex; justify-content: center; gap: 20px; font-size: 1.2rem;">
+        <i class="fab fa-twitter"></i>
+        <i class="fab fa-linkedin"></i>
+        <i class="fab fa-github"></i>
+    </div>
+</footer>
 {% endblock %}

@@ -1,0 +1,12 @@
+.git
+.env
+.env.test
+.env.dev
+var/
+vendor/
+node_modules/
+tests/
+docker-compose.yml
+compose.yaml
+compose.override.yaml
+phpunit.xml.dist

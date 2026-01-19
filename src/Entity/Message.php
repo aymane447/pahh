@@ -30,6 +30,9 @@ class Message
     #[ORM\ManyToOne(inversedBy: 'messages')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Ticket $id_ticket = null;
+
+    #[ORM\Column(options: ["default" => false])]
+    private ?bool $isRead = false;
     
 
     public function getId(): ?int
@@ -96,4 +99,16 @@ class Message
 
         return $this;
     }
+    public function isRead(): ?bool
+    {
+        return $this->isRead;
+    }
+
+    public function setIsRead(bool $isRead): static
+    {
+        $this->isRead = $isRead;
+
+        return $this;
+    }
 }
+

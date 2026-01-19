@@ -32,8 +32,8 @@ $utili=$utilisateurRepository->findAll();
         $form = $this->createForm(UtilisateurType::class, $tent1);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $hashedPassword = $this->passwordHasher->hashPassword($tent1, $tent1->getpassword());
-            $tent1->setpassword($hashedPassword);
+            $hashedPassword = $this->passwordHasher->hashPassword($tent1, $tent1->getPassword());
+            $tent1->setPassword($hashedPassword);
             $entityManager->persist($tent1);
             $entityManager->flush();
         }
@@ -58,8 +58,8 @@ $utili=$utilisateurRepository->findAll();
              $form = $this->createForm(UtilisateurType::class, $utili);
         $form->handleRequest($request);//eviter poste ou get 
         if ($form->isSubmitted() && $form->isValid()) {
-            $hashedPassword = $this->passwordHasher->hashPassword($utili, $utili->getpassword());
-            $utili->setpassword($hashedPassword);
+            $hashedPassword = $this->passwordHasher->hashPassword($utili, $utili->getPassword());
+            $utili->setPassword($hashedPassword);
             $entityManager->persist($utili);
             $entityManager->flush();
         }

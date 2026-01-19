@@ -46,6 +46,9 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTime $date_creation = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $profile_picture = null;
+
     /**
      * @var Collection<int, Ticket>
      */
@@ -155,12 +158,12 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getpassword(): ?string
+    public function getPassword(): ?string
     {
         return $this->password;
     }
 
-    public function setpassword(string $password): static
+    public function setPassword(string $password): static
     {
         $this->password = $password;
 
@@ -247,6 +250,17 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
                 $message->setIdUtilisateur(null);
             }
         }
+
+        return $this;
+    }
+    public function getProfilePicture(): ?string
+    {
+        return $this->profile_picture;
+    }
+
+    public function setProfilePicture(?string $profile_picture): static
+    {
+        $this->profile_picture = $profile_picture;
 
         return $this;
     }

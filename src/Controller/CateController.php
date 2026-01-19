@@ -2,85 +2,75 @@
 
 namespace App\Controller;
 
-use Doctrine\ORM\EntityManagerInterface;
-use Dom\Entity;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Attribute\Route;
 use App\Entity\Categorie;
-use Symfony\Component\HttpFoundation\Request;
 use App\Form\CategorieType;
 use App\Repository\CategorieRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
+#[Route('/cate')]
+#[IsGranted('ROLE_ADMIN')]
 final class CateController extends AbstractController
 {
-    #[Route('/cate', name: 'app_cate')]
+    #[Route('', name: 'app_cate')]
     public function index(CategorieRepository $categorieRepository): Response
     {
-        $categories = $categorieRepository->findAll();
         return $this->render('cate/index.html.twig', [
-            'categorie' => $categories, 
+            'categories' => $categorieRepository->findAll(),
         ]);
     }
-    #[Route('/cate/ajou', name: 'app_cate_ajou')]
-    public function ajout(EntityManagerInterface $entityManager,Request $request): Response
+
+    #[Route('/new', name: 'app_cate_new', methods: ['GET', 'POST'])]
+    public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
-        $tent1 = new Categorie();
-        $form = $this->createForm(CategorieType::class, $tent1);
+        $categorie = new Categorie();
+        $form = $this->createForm(CategorieType::class, $categorie);
         $form->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($tent1);
+            if (!$categorie->getIdCategorie()) {
+                $categorie->setIdCategorie('CAT-' . strtoupper(bin2hex(random_bytes(2))));
+            }
+            $entityManager->persist($categorie);
             $entityManager->flush();
+
+            return $this->redirectToRoute('app_cate', [], Response::HTTP_SEE_OTHER);
         }
-        return $this->render('cate/ajou.html.twig', [
+
+        return $this->render('cate/new.html.twig', [
+            'categorie' => $categorie,
             'form' => $form->createView(),
         ]);
     }
 
-    #[Route('/cate/sup/{id}', name: 'app_cate_sup')]
-public function supprimerAnnonce(
-    int $id,
-    Request $request,
-    EntityManagerInterface $entityManager
-): Response {
-    $categories = $entityManager->getRepository(Categorie::class)->find($id);
-
-    if (!$categories) {
-        throw $this->createNotFoundException("Catégorie introuvable");
-    }
-
-    // Récupérer les tickets liés
-    $tickets = $categories->getTickets();
-
-    // Vérifier si l'utilisateur a confirmé
-    if ($request->query->get('confirm') !== 'true') {
-        return $this->render('cate/index.html.twig', [
-           'categorie' => $categories,
-           'tickets' => $tickets,
-        ]);
-    }
-
-    // Si confirmé → supprimer tickets puis catégorie
-    foreach ($tickets as $ticket) {
-        $entityManager->remove($ticket);
-    }
-
-    $entityManager->remove($categories);
-    $entityManager->flush();
-
-    return $this->redirectToRoute('app_cate');
-}
-        #[Route('/cate/mod/{id}', name: 'app_cate_mod')]
-        public function mod(EntityManagerInterface $entityManager,Request $request,$id): Response
-        {
-            $Cate=$entityManager->getRepository(Categorie::class)->find($id);
-               $form = $this->createForm(CategorieType::class, $Cate);
+    #[Route('/{id}/edit', name: 'app_cate_edit', methods: ['GET', 'POST'])]
+    public function edit(Request $request, Categorie $categorie, EntityManagerInterface $entityManager): Response
+    {
+        $form = $this->createForm(CategorieType::class, $categorie);
         $form->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
+
+            return $this->redirectToRoute('app_cate', [], Response::HTTP_SEE_OTHER);
         }
-        return $this->render('cate/ajou.html.twig', [
+
+        return $this->render('cate/edit.html.twig', [
+            'categorie' => $categorie,
             'form' => $form->createView(),
         ]);
+    }
+
+    #[Route('/{id}/delete', name: 'app_cate_delete', methods: ['POST', 'GET'])]
+    public function delete(Request $request, Categorie $categorie, EntityManagerInterface $entityManager): Response
+    {
+        $entityManager->remove($categorie);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('app_cate', [], Response::HTTP_SEE_OTHER);
     }
 }

@@ -3,45 +3,55 @@
 {% block title %}Hello UtiliController!{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+<div class="container">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+        <h1 style="font-size: 2rem; font-weight: 700;">Gestion des Utilisateurs</h1>
+        <a href="{{ path('app_utili_ajou') }}" class="btn-action" style="padding: 10px 20px; text-decoration: none;">+ Nouvel Utilisateur</a>
+    </div>
 
-
-<div class="example-wrapper">
-    <h1>Liste des Utilisateurs</h1>
-
-    <table class="table">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Nom</th>
-                <th>Email</th>
-                <th>Prénom</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for utili in utilis %}
-            <tr>
-                <td>{{ utili.id }}</td>
-                <td>{{ utili.nom }}</td>
-                <td>{{ utili.email }}</td>
-                 <td>{{ utili.prenom }}</td>
-                <td>
-                    <a href="{{ path('app_utili_sup', {'id': utili.id}) }}" style="color: red;" class="btn btn-danger" onclick="return confirm('Voulez-vous vraiment supprimer ce chercheur ?');">Supprimer</a>
-                    <a href="{{ path('app_utili_mod', {'id': utili.id}) }}" class="btn btn-primary">Modifier</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="4">Aucun utilisateur trouvé</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-
-    <a href="{{ path('app_utili_ajou') }}" class="btn btn-success">Ajouter un nouvel utilisateur</a>
-
+    <div class="card" style="padding: 0; overflow: hidden;">
+        <table style="width: 100%; border-collapse: collapse; text-align: left;">
+            <thead style="background: rgba(255, 255, 255, 0.03); color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase;">
+                <tr>
+                    <th style="padding: 15px 20px;">Utilisateur</th>
+                    <th style="padding: 15px 20px;">Email</th>
+                    <th style="padding: 15px 20px;">Rôles</th>
+                    <th style="padding: 15px 20px; text-align: right;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for utili in utilis %}
+                <tr style="border-top: 1px solid rgba(255, 255, 255, 0.05); transition: background 0.2s;">
+                    <td style="padding: 15px 20px;">
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <img src="{{ utili.profilePicture ? asset('uploads/profiles/' ~ utili.profilePicture) : 'https://ui-avatars.com/api/?name=' ~ utili.nom ~ '+' ~ utili.prenom ~ '&background=6366f1&color=fff&size=32' }}" 
+                                 style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover;">
+                            <div>
+                                <div style="font-weight: 600;">{{ utili.nom }} {{ utili.prenom }}</div>
+                                <div style="font-size: 0.8rem; color: var(--text-muted);">@{{ utili.idUtilisateur }}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td style="padding: 15px 20px; color: var(--text-muted);">{{ utili.email }}</td>
+                    <td style="padding: 15px 20px;">
+                        <span style="font-size: 0.75rem; background: rgba(56, 189, 248, 0.1); color: var(--primary); padding: 2px 10px; border-radius: 10px; border: 1px solid rgba(56, 189, 248, 0.2);">
+                            {{ utili.roles[0]|replace({'ROLE_': ''}) }}
+                        </span>
+                    </td>
+                    <td style="padding: 15px 20px; text-align: right;">
+                        <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                            <a href="{{ path('app_utili_mod', {'id': utili.id}) }}" style="color: var(--primary); text-decoration: none; font-size: 0.9rem;">Modifier</a>
+                            <a href="{{ path('app_utili_sup', {'id': utili.id}) }}" style="color: #ef4444; text-decoration: none; font-size: 0.9rem;" onclick="return confirm('Voulez-vous vraiment supprimer cet utilisateur ?');">Supprimer</a>
+                        </div>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="4" style="padding: 40px; text-align: center; color: var(--text-muted);">Aucun utilisateur trouvé</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </div>
 {% endblock %}

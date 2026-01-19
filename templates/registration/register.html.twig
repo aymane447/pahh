@@ -1,0 +1,193 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Sign Up - TicketFlow{% endblock %}
+
+{% block body %}
+<div class="container">
+<style>
+    .reg-container {
+        max-width: 500px;
+        margin: 60px auto;
+        padding: 40px;
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 20px;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        color: white;
+    }
+
+    .reg-header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .reg-header h1 {
+        font-size: 2rem;
+        color: #38bdf8;
+        margin-bottom: 10px;
+    }
+
+    .form-group {
+        margin-bottom: 18px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 6px;
+        font-size: 0.85rem;
+        color: #94a3b8;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 10px 14px;
+        background: rgba(15, 23, 42, 0.6);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        color: white;
+        transition: all 0.3s;
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: #38bdf8;
+        box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2);
+    }
+
+    .btn-reg {
+        width: 100%;
+        padding: 12px;
+        background: linear-gradient(135deg, #38bdf8 0%, #2563eb 100%);
+        border: none;
+        border-radius: 12px;
+        color: white;
+        font-weight: 600;
+        cursor: pointer;
+        transition: transform 0.2s, box-shadow 0.2s;
+        margin-top: 10px;
+    }
+
+    .btn-reg:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.4);
+    }
+    
+    .row {
+        display: flex;
+        gap: 15px;
+    }
+    .row > div {
+        flex: 1;
+    }
+
+    /* Role Selector Styles */
+    .role-selector {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        margin-bottom: 20px;
+    }
+
+    .role-selector input[type="radio"] {
+        display: none;
+    }
+
+    .role-option {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 15px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .role-option:hover {
+        background: rgba(255, 255, 255, 0.1);
+        border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .role-selector input[type="radio"]:checked + .role-option {
+        background: rgba(56, 189, 248, 0.1);
+        border-color: #38bdf8;
+        box-shadow: 0 0 15px rgba(56, 189, 248, 0.2);
+    }
+
+    .role-icon {
+        font-size: 1.5rem;
+        margin-bottom: 5px;
+    }
+
+    .role-text {
+        font-size: 0.85rem;
+        font-weight: 500;
+        color: #94a3b8;
+    }
+
+    .role-selector input[type="radio"]:checked + .role-option .role-text {
+        color: #38bdf8;
+    }
+</style>
+
+<div class="reg-container">
+    <div class="reg-header">
+        <h1>Créer un compte</h1>
+        <p>Rejoignez TicketFlow pour gérer vos demandes d'assistance</p>
+    </div>
+
+    {{ form_start(registrationForm) }}
+        <div class="form-group">
+            <label>Je suis un...</label>
+            <div class="role-selector">
+                <input type="radio" id="role_client" name="role_selection" value="ROLE_CLIENT" checked>
+                <label for="role_client" class="role-option">
+                    <span class="role-icon">👤</span>
+                    <span class="role-text">Client</span>
+                </label>
+
+                <input type="radio" id="role_agent" name="role_selection" value="ROLE_AGENT">
+                <label for="role_agent" class="role-option">
+                    <span class="role-icon">🛠️</span>
+                    <span class="role-text">Agent</span>
+                </label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Nom d'utilisateur</label>
+            {{ form_widget(registrationForm.id_utilisateur, { 'attr': {'class': 'form-control', 'placeholder': 'john_doe'} }) }}
+        </div>
+
+        <div class="row">
+            <div class="form-group">
+                <label>Prénom</label>
+                {{ form_widget(registrationForm.prenom, { 'attr': {'class': 'form-control'} }) }}
+            </div>
+            <div class="form-group">
+                <label>Nom</label>
+                {{ form_widget(registrationForm.nom, { 'attr': {'class': 'form-control'} }) }}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Adresse E-mail</label>
+            {{ form_widget(registrationForm.email, { 'attr': {'class': 'form-control', 'type': 'email'} }) }}
+        </div>
+
+        <div class="form-group">
+            <label>Mot de passe</label>
+            {{ form_widget(registrationForm.password, { 'attr': {'class': 'form-control', 'type': 'password'} }) }}
+        </div>
+
+        <button type="submit" class="btn-reg">Créer mon compte</button>
+        
+        <div style="text-align: center; margin-top: 20px; font-size: 0.85rem;">
+            <p>Déjà un compte ? <a href="{{ path('app_login') }}" style="color: #38bdf8; text-decoration: none;">Connectez-vous ici</a></p>
+        </div>
+    {{ form_end(registrationForm) }}
+</div>
+</div>
+{% endblock %}

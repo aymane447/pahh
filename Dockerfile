@@ -1,38 +1,20 @@
-FROM php:8.2-apache
+FROM php:8.2-cli
 
-# Install system dependencies
+WORKDIR /app
+
 RUN apt-get update && apt-get install -y \
-    git \
-    unzip \
-    libpq-dev \
-    libicu-dev \
-    && docker-php-ext-install \
-    pdo_pgsql \
-    intl \
-    opcache
+    git unzip libicu-dev libzip-dev libpq-dev zip \
+    && docker-php-ext-install intl pdo pdo_pgsql zip
 
-# Enable Apache Rewrite Module
-RUN a2enmod rewrite
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-# Install Composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
-
-# Set working directory
-WORKDIR /var/www/html
-
-# Configure Apache DocumentRoot to /public
-ENV APACHE_DOCUMENT_ROOT /var/www/html/public
-RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
-RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf
-
-# Copy application files
 COPY . .
 
-# Install PHP dependencies
-ENV COMPOSER_ALLOW_SUPERUSER=1
-RUN composer install --no-dev --optimize-autoloader --no-scripts
+RUN composer install --optimize-autoloader --no-scripts
+# COPY railway_autoload_runtime.php vendor/autoload_runtime.php
+RUN composer dump-autoload --optimize --classmap-authoritative --no-dev
 
-# Create var directory and set permissions
-RUN mkdir -p var && chown -R www-data:www-data var
+ENV APP_ENV=dev
+ENV TRUSTED_PROXIES=*
 
-EXPOSE 80
+CMD sh -c "php bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration && php -S 0.0.0.0:${PORT:-80} -t public"

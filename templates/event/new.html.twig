@@ -3,28 +3,67 @@
 {% block title %}Nouvel Événement{% endblock %}
 
 {% block body %}
-<div class="container mt-4">
-    <h1>Créer un nouvel événement</h1>
+<div class="container mt-4" style="max-width: 800px;">
+    <div class="card p-5">
+        <h1 class="mb-4 text-center">Créer un événement</h1>
+        <p class="text-center text-muted mb-5">Remplissez les informations ci-dessous pour publier une nouvelle annonce.</p>
 
-    {{ form_start(form) }}
-        <div class="row">
-            <div class="col-md-8">
-                {{ form_row(form.titre) }}
-                {{ form_row(form.description) }}
-                
-                <div class="row">
-                    <div class="col-md-6">{{ form_row(form.date_debut) }}</div>
-                    <div class="col-md-6">{{ form_row(form.date_fin) }}</div>
-                </div>
-
-                {{ form_row(form.lieu) }}
-                {{ form_row(form.prix) }}
-                {{ form_row(form.image) }}
-
-                <button class="btn btn-success mt-3"><i class="fas fa-save"></i> Enregistrer</button>
-                <a href="{{ path('app_event_index') }}" class="btn btn-secondary mt-3">Retour</a>
+        {{ form_start(form) }}
+            
+            <div class="mb-4">
+                {{ form_label(form.titre) }}
+                {{ form_widget(form.titre) }}
+                {{ form_errors(form.titre) }}
             </div>
-        </div>
-    {{ form_end(form) }}
+
+            <div class="mb-4">
+                {{ form_label(form.description) }}
+                {{ form_widget(form.description) }}
+                {{ form_errors(form.description) }}
+            </div>
+            
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    {{ form_label(form.date_debut) }}
+                    {{ form_widget(form.date_debut) }}
+                    {{ form_errors(form.date_debut) }}
+                </div>
+                <div class="col-md-6 mb-4">
+                    {{ form_label(form.date_fin) }}
+                    {{ form_widget(form.date_fin) }}
+                    {{ form_errors(form.date_fin) }}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    {{ form_label(form.lieu) }}
+                    {{ form_widget(form.lieu) }}
+                    {{ form_errors(form.lieu) }}
+                </div>
+                <div class="col-md-6 mb-4">
+                    {{ form_label(form.prix) }}
+                    <div class="input-group">
+                        {{ form_widget(form.prix) }}
+                        <span class="input-group-text" style="background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.1); color: white;">MAD</span>
+                    </div>
+                    {{ form_errors(form.prix) }}
+                </div>
+            </div>
+
+            <div class="mb-4">
+                {{ form_label(form.image) }}
+                {{ form_widget(form.image) }}
+                {{ form_errors(form.image) }}
+                <div class="form-text text-muted">Formats acceptés : JPG, PNG, WEBP (Max 2Mo)</div>
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center mt-5">
+                <a href="{{ path('app_event_index') }}" class="btn btn-outline-secondary px-4">Annuler</a>
+                <button class="btn btn-primary px-5 py-2"><i class="fas fa-save me-2"></i> Publier l'événement</button>
+            </div>
+
+        {{ form_end(form) }}
+    </div>
 </div>
 {% endblock %}

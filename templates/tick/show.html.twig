@@ -3,134 +3,175 @@
 {% block title %}Ticket #{{ ticket.id }} - TicketFlow{% endblock %}
 
 {% block body %}
-<div class="container">
-    <div style="margin-bottom: 30px; display: flex; justify-content: space-between; align-items: flex-start;">
+<div class="container py-5">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start gap-4 mb-5">
         <div>
-            <a href="{{ path('app_tick') }}" style="color: var(--text-muted); text-decoration: none; font-size: 0.9rem; display: flex; align-items: center; gap: 8px;">
-                ← Retour à la liste
+            <a href="{{ path('app_tick') }}" class="text-muted text-decoration-none small mb-2 d-inline-block">
+                <i class="fas fa-arrow-left me-2"></i> Retour à la liste
             </a>
-            <h1 style="font-size: 2.2rem; font-weight: 700; margin-top: 15px;">{{ ticket.titre }}</h1>
-            <div style="display: flex; gap: 15px; margin-top: 10px; align-items: center;">
-                <span style="padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; 
-                    background: {{ ticket.statut == 'Ouvert' ? 'rgba(34, 197, 94, 0.1)' : (ticket.statut == 'En cours' ? 'rgba(59, 130, 246, 0.1)' : 'rgba(100, 116, 139, 0.1)') }};
-                    color: {{ ticket.statut == 'Ouvert' ? '#4ade80' : (ticket.statut == 'En cours' ? '#60a5fa' : '#94a3b8') }};
-                    border: 1px solid {{ ticket.statut == 'Ouvert' ? 'rgba(34, 197, 94, 0.2)' : (ticket.statut == 'En cours' ? 'rgba(59, 130, 246, 0.2)' : 'rgba(100, 116, 139, 0.2)') }};">
+            <h1 class="display-6 fw-bold mb-2">{{ ticket.titre }}</h1>
+            <div class="d-flex flex-wrap gap-3 align-items-center mt-3">
+                {% set status_class = ticket.statut == 'Ouvert' ? 'bg-success' : (ticket.statut == 'En cours' ? 'bg-warning' : 'bg-secondary') %}
+                <span class="badge {{ status_class }} bg-opacity-10 text-{{ status_class|split('-')[1] }} rounded-pill border border-{{ status_class|split('-')[1] }} border-opacity-25 px-3 py-2" style="font-size: 0.75rem;">
                     {{ ticket.statut|upper }}
                 </span>
-                <span style="color: var(--text-muted); font-size: 0.9rem;">Catégorie: <strong>{{ ticket.idCategorie.nom }}</strong></span>
-                <span style="color: var(--text-muted); font-size: 0.9rem;">Ticket ID: <strong>{{ ticket.idTicket }}</strong></span>
+                <span class="text-muted small"><i class="fas fa-tag me-1"></i> {{ ticket.idCategorie.nom }}</span>
+                <span class="text-muted small"><i class="fas fa-hashtag me-1"></i> {{ ticket.idTicket }}</span>
+                {% if ticket.event %}
+                    <a href="{{ path('app_event_show', {'id': ticket.event.id}) }}" class="badge bg-info bg-opacity-10 text-info text-decoration-none rounded-pill border border-info border-opacity-25 px-3 py-2">
+                        <i class="fas fa-calendar-alt me-1"></i> Événement: {{ ticket.event.titre }}
+                    </a>
+                {% endif %}
             </div>
         </div>
 
-        <div style="display: flex; gap: 10px;">
+        <div class="d-flex gap-2">
             {% if is_granted('ROLE_CLIENT') and ticket.idClient is null %}
-                <a href="{{ path('app_tick_acheter', {'id': ticket.id}) }}" class="btn-action" style="background: #fbbf24; color: #000; padding: 10px 20px; text-decoration: none; border-radius: 8px; font-weight: 700;">ACHETER CE TICKET</a>
+                <a href="{{ path('app_tick_acheter', {'id': ticket.id}) }}" class="btn btn-warning px-4 rounded-pill fw-bold shadow-sm">
+                    <i class="fas fa-shopping-cart me-2"></i> ACHETER
+                </a>
             {% endif %}
 
-            {% if (is_granted('ROLE_AGENT') or is_granted('ROLE_ADMIN')) and ticket.idAgent is null %}
-                <a href="{{ path('app_tick_claim', {'id': ticket.id}) }}" class="btn-action" style="background: var(--primary); color: white; padding: 10px 20px; text-decoration: none; border-radius: 8px;">Prendre en charge</a>
-            {% endif %}
-            
-            {% if (is_granted('ROLE_AGENT') or is_granted('ROLE_ADMIN')) and ticket.statut != 'Résolu' %}
-                <a href="{{ path('app_tick_close', {'id': ticket.id}) }}" class="btn-action" style="background: #ef4444; color: white; padding: 10px 20px; text-decoration: none; border-radius: 8px;">Marquer comme Résolu</a>
+            {% if (is_granted('ROLE_AGENT') or is_granted('ROLE_ADMIN')) %}
+                {% if ticket.idAgent is null %}
+                    <a href="{{ path('app_tick_claim', {'id': ticket.id}) }}" class="btn btn-primary px-4 rounded-pill shadow-sm">
+                        Prendre en charge
+                    </a>
+                {% endif %}
+                
+                {% if ticket.statut != 'Résolu' %}
+                    <a href="{{ path('app_tick_close', {'id': ticket.id}) }}" class="btn btn-danger px-4 rounded-pill shadow-sm">
+                        Clôturer
+                    </a>
+                {% endif %}
             {% endif %}
         </div>
     </div>
 
-    <div style="display: grid; grid-template-columns: 1fr 300px; gap: 30px;">
-        {# Chat / Timeline Area #}
-        <div>
-            <div class="card" style="padding: 30px; margin-bottom: 30px;">
-                <h3 style="margin-bottom: 20px; font-size: 1.1rem; color: var(--primary);">Description Initiale</h3>
-                <p style="line-height: 1.6; white-space: pre-wrap;">{{ ticket.description }}</p>
-                <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.05); font-size: 0.85rem; color: var(--text-muted);">
-                    Posté le {{ ticket.dateCreation|date('d/m/Y H:i') }} par 
-                    {% if ticket.idClient %}
-                        {{ ticket.idClient.nom }} {{ ticket.idClient.prenom }} (Client)
-                    {% else %}
-                        {{ ticket.idAgent.nom }} {{ ticket.idAgent.prenom }} (Agent support)
-                    {% endif %}
+    <div class="row g-5">
+        <!-- Main Chat/Description Section -->
+        <div class="col-lg-8">
+            <div class="glass-card p-4 rounded-4 mb-5">
+                <div class="d-flex justify-content-between align-items-center mb-4 border-bottom border-white border-opacity-10 pb-3">
+                    <h5 class="mb-0 fw-bold">Détails de la demande</h5>
+                    <small class="text-muted">{{ ticket.dateCreation|date('d M Y H:i') }}</small>
                 </div>
+                <div class="text-white opacity-75 leading-relaxed" style="white-space: pre-wrap;">{{ ticket.description }}</div>
             </div>
 
-            <h3 style="margin-bottom: 20px; font-size: 1.2rem;">Discussion</h3>
+            <h5 class="fw-bold mb-4 d-flex align-items-center">
+                <i class="fas fa-comments text-primary me-2"></i> Discussion
+            </h5>
             
-            <div style="display: flex; flex-direction: column; gap: 20px; margin-bottom: 30px;">
+            <div class="messages-container d-flex flex-column gap-4 mb-5">
                 {% for msg in ticket.messages %}
                     {% set is_me = msg.idUtilisateur == app.user %}
-                    <div style="display: flex; flex-direction: column; align-items: {{ is_me ? 'flex-end' : 'flex-start' }};">
-                        <div style="max-width: 80%; padding: 15px 20px; border-radius: {{ is_me ? '20px 20px 0 20px' : '20px 20px 20px 0' }}; 
-                            background: {{ is_me ? 'var(--primary)' : 'rgba(255,255,255,0.05)' }}; border: 1px solid rgba(255,255,255,0.1); color: white;">
-                            <div style="font-size: 0.8rem; margin-bottom: 5px; opacity: 0.8; font-weight: 600;">
-                                {{ msg.idUtilisateur.nom }} {{ msg.idUtilisateur.prenom }} 
-                                <span style="font-weight: 400; margin-left: 5px;">• {{ msg.dateMessage|date('H:i') }}</span>
+                    <div class="d-flex {{ is_me ? 'justify-content-end' : 'justify-content-start' }}">
+                        <div class="message-bubble {{ is_me ? 'me-style' : 'other-style' }} p-3 rounded-4 shadow-sm" style="max-width: 85%;">
+                            <div class="d-flex justify-content-between align-items-center mb-2 gap-4">
+                                <span class="small fw-bold {{ is_me ? 'text-white' : 'text-primary' }}">
+                                    {{ msg.idUtilisateur.nom }} {{ msg.idUtilisateur.prenom }}
+                                </span>
+                                <span class="text-muted" style="font-size: 0.7rem;">{{ msg.dateMessage|date('H:i') }}</span>
                             </div>
-                            <div style="line-height: 1.5;">{{ msg.contenu }}</div>
+                            <div class="message-content {{ is_me ? 'text-white' : 'text-white-50' }}">{{ msg.contenu }}</div>
                         </div>
                     </div>
                 {% else %}
-                    <div style="text-align: center; color: var(--text-muted); padding: 40px;">Aucun message pour le moment. Soyez le premier à répondre !</div>
+                    <div class="text-center py-5 glass-card rounded-4 opacity-50">
+                        <i class="fas fa-comment-slash fa-2x mb-3"></i>
+                        <p class="mb-0">Aucun message pour le moment.</p>
+                    </div>
                 {% endfor %}
             </div>
 
             {% if ticket.statut != 'Résolu' %}
-                <div class="card">
+                <div class="glass-card p-4 rounded-4">
                     <form action="{{ path('app_tick_message', {'id': ticket.id}) }}" method="POST">
-                        <textarea name="contenu" rows="4" style="width: 100%; background: rgba(15, 23, 42, 0.5); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: white; padding: 15px; font-family: inherit; margin-bottom: 15px;" placeholder="Écrivez votre réponse ici..."></textarea>
-                        <div style="display: flex; justify-content: flex-end;">
-                            <button type="submit" class="btn-action" style="padding: 10px 30px; background: var(--primary); border: none; border-radius: 8px; color: white; font-weight: 600; cursor: pointer;">Envoyer le message</button>
+                        <textarea name="contenu" class="form-control mb-4" rows="4" placeholder="Votre réponse..."></textarea>
+                        <div class="d-flex justify-content-end">
+                            <button type="submit" class="btn btn-primary px-5 rounded-pill shadow">
+                                <i class="fas fa-paper-plane me-2"></i> Répondre
+                            </button>
                         </div>
                     </form>
                 </div>
             {% else %}
-                <div style="background: rgba(255, 255, 255, 0.05); text-align: center; padding: 20px; border-radius: 12px; color: var(--text-muted);">
-                    Ce ticket est résolu. La discussion est fermée.
+                <div class="alert alert-secondary text-center rounded-4 p-4 border-0">
+                    <i class="fas fa-lock me-2"></i> Ce ticket est résolu et la discussion est fermée.
                 </div>
             {% endif %}
         </div>
 
-        {# Information Sidebar #}
-        <div style="display: flex; flex-direction: column; gap: 20px;">
-            <div class="card" style="padding: 20px;">
-                <h4 style="margin-bottom: 15px; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted);">Détails</h4>
-                
-                <div style="margin-bottom: 15px;">
-                    <div style="font-size: 0.75rem; color: var(--text-muted);">Propriétaire</div>
-                    <div style="font-weight: 500;">
-                        {% if ticket.idClient %}
-                            {{ ticket.idClient.nom }} {{ ticket.idClient.prenom }}
-                        {% else %}
-                             <span style="color: var(--primary);">Agent Support</span>
-                        {% endif %}
+        <!-- Sidebar Info -->
+        <div class="col-lg-4">
+            <div class="sticky-top" style="top: 100px;">
+                <div class="glass-card p-4 rounded-4 mb-4">
+                    <h6 class="text-uppercase small fw-bold tracking-wider text-muted mb-4">Informations Système</h6>
+                    
+                    <div class="mb-4">
+                        <label class="small text-muted mb-1 d-block">Auteur</label>
+                        <div class="d-flex align-items-center gap-3">
+                            <img src="https://ui-avatars.com/api/?name={{ ticket.idClient ? ticket.idClient.nom : 'Admin' }}&background=6366f1&color=fff&size=32" class="rounded-circle" style="width: 32px;">
+                            <span class="fw-bold">{{ ticket.idClient ? ticket.idClient.nom ~ ' ' ~ ticket.idClient.prenom : 'Support' }}</span>
+                        </div>
                     </div>
-                </div>
 
-                <div style="margin-bottom: 15px;">
-                    <div style="font-size: 0.75rem; color: var(--text-muted);">Agent Assigné</div>
-                    <div style="font-weight: 500;">
-                        {% if ticket.idAgent %}
-                            {{ ticket.idAgent.nom }} {{ ticket.idAgent.prenom }}
-                        {% else %}
-                            <span style="color: #ef4444; font-size: 0.85rem;">Non assigné</span>
-                        {% endif %}
+                    <div class="mb-4">
+                        <label class="small text-muted mb-1 d-block">Agent Assigné</label>
+                        <div class="d-flex align-items-center gap-3">
+                            {% if ticket.idAgent %}
+                                <img src="https://ui-avatars.com/api/?name={{ ticket.idAgent.nom }}&background=22c55e&color=fff&size=32" class="rounded-circle" style="width: 32px;">
+                                <span class="fw-bold text-success">{{ ticket.idAgent.nom }} {{ ticket.idAgent.prenom }}</span>
+                            {% else %}
+                                <div class="bg-danger bg-opacity-10 text-danger rounded-circle d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
+                                    <i class="fas fa-user-slash" style="font-size: 0.8rem;"></i>
+                                </div>
+                                <span class="text-danger small fw-bold">Non assigné</span>
+                            {% endif %}
+                        </div>
                     </div>
-                </div>
 
-                <div style="margin-bottom: 15px;">
-                    <div style="font-size: 0.75rem; color: var(--text-muted);">Priorité</div>
-                    {% set priority_color = ticket.priorite|lower == 'haute' ? '#ef4444' : (ticket.priorite|lower == 'moyenne' ? '#f59e0b' : '#38bdf8') %}
-                    <div style="color: {{ priority_color }}; font-weight: 600; display: flex; align-items: center; gap: 6px;">
-                        <span style="width: 8px; height: 8px; border-radius: 50%; background: {{ priority_color }};"></span>
-                        {{ ticket.priorite }}
+                    <div class="mb-4">
+                        <label class="small text-muted mb-1 d-block">Priorité</label>
+                        {% set priority_color = ticket.priorite|lower == 'haute' ? 'text-danger' : (ticket.priorite|lower == 'moyenne' ? 'text-warning' : 'text-info') %}
+                        <div class="{{ priority_color }} fw-bold d-flex align-items-center gap-2">
+                            <i class="fas fa-circle" style="font-size: 0.6rem;"></i>
+                            {{ ticket.priorite }}
+                        </div>
                     </div>
-                </div>
 
-                <div>
-                    <div style="font-size: 0.75rem; color: var(--text-muted);">Dernière mise à jour</div>
-                    <div style="font-size: 0.9rem;">{{ ticket.dateMise|date('d/m/Y H:i') }}</div>
+                    <div class="pt-3 border-top border-white border-opacity-10">
+                        <label class="small text-muted mb-1 d-block">Dernière activité</label>
+                        <div class="small">{{ ticket.dateMise|date('d M Y à H:i') }}</div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<style>
+    .glass-card {
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    
+    .message-bubble {
+        border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    
+    .me-style {
+        background: rgba(56, 189, 248, 0.1);
+        border-color: rgba(56, 189, 248, 0.2);
+    }
+    
+    .other-style {
+        background: rgba(255, 255, 255, 0.05);
+    }
+    
+    .tracking-wider { letter-spacing: 0.05em; }
+    .leading-relaxed { line-height: 1.625; }
+</style>
 {% endblock %}

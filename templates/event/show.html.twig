@@ -4,44 +4,118 @@
 
 {% block body %}
 <div class="container mt-5">
-    <div class="row">
-        <div class="col-md-5">
-            {% if event.image %}
-                <img src="{{ asset('uploads/events/' ~ event.image) }}" class="img-fluid rounded shadow" alt="{{ event.titre }}">
-            {% else %}
-                <div class="bg-light rounded d-flex align-items-center justify-content-center" style="height: 300px;">
-                    <span class="text-muted">Pas d'image</span>
+    <div class="row g-5">
+        <!-- Event Image Section -->
+        <div class="col-lg-5">
+            <div class="sticky-top" style="top: 100px;">
+                <div class="event-image-container shadow-lg rounded-4 overflow-hidden" style="position: relative; aspect-ratio: 3/4;">
+                    {% if event.image %}
+                        <img src="{{ asset('uploads/events/' ~ event.image) }}" class="w-100 h-100" style="object-fit: cover;" alt="{{ event.titre }}">
+                    {% else %}
+                        <div class="w-100 h-100 bg-light d-flex align-items-center justify-content-center">
+                            <i class="fas fa-image fa-4x text-muted opacity-25"></i>
+                        </div>
+                    {% endif %}
+                    <div class="price-badge">
+                        {{ event.prix }} MAD
+                    </div>
                 </div>
-            {% endif %}
+            </div>
         </div>
-        <div class="col-md-7">
-            <h1 class="display-4">{{ event.titre }}</h1>
-            <p class="h4 text-primary mt-3">{{ event.prix }} MAD</p>
-            
-            <p class="text-muted mt-3">
-                <i class="fas fa-calendar-alt"></i> Du {{ event.dateDebut|date('d/m/Y H:i') }} au {{ event.dateFin|date('d/m/Y H:i') }}<br>
-                <i class="fas fa-map-marker-alt"></i> {{ event.lieu }}
-            </p>
 
-            <div class="mt-4">
-                <h5>Description</h5>
-                <p>{{ event.description }}</p>
+        <!-- Event Info Section -->
+        <div class="col-lg-7">
+            <nav aria-label="breadcrumb" class="mb-4">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{{ path('app_event_index') }}" class="text-primary text-decoration-none">Événements</a></li>
+                    <li class="breadcrumb-item active text-muted" aria-current="page">{{ event.titre }}</li>
+                </ol>
+            </nav>
+
+            <h1 class="display-4 fw-bold mb-4">{{ event.titre }}</h1>
+
+            <div class="d-flex flex-wrap gap-4 mb-5">
+                <div class="info-pill">
+                    <i class="fas fa-calendar-alt text-primary me-2"></i>
+                    <span>{{ event.dateDebut|date('d M Y') }} - {{ event.dateFin|date('d M Y') }}</span>
+                </div>
+                <div class="info-pill">
+                    <i class="fas fa-clock text-primary me-2"></i>
+                    <span>{{ event.dateDebut|date('H:i') }}</span>
+                </div>
+                <div class="info-pill">
+                    <i class="fas fa-map-marker-alt text-primary me-2"></i>
+                    <span>{{ event.lieu }}</span>
+                </div>
             </div>
 
-            <div class="mt-5">
+            <div class="event-description mb-5 p-4 rounded-4" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05);">
+                <h5 class="fw-bold mb-3 text-primary">À propos de cet événement</h5>
+                <p class="text-muted leading-relaxed" style="white-space: pre-line; font-size: 1.1rem;">{{ event.description }}</p>
+            </div>
+
+            <div class="booking-card p-4 rounded-5 shadow-lg">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <h4 class="mb-0 fw-bold">Ticket d'accès</h4>
+                        <small class="text-muted">Billet unique pour l'événement</small>
+                    </div>
+                    <div class="h3 mb-0 text-primary fw-bold">{{ event.prix }} MAD</div>
+                </div>
+
                 {% if is_granted('ROLE_CLIENT') %}
-                    <form action="{{ path('app_event_buy', {'id': event.id}) }}" method="post" onsubmit="return confirm('Voulez-vous vraiment acheter un ticket pour cet événement ?');">
-                        <button type="submit" class="btn btn-lg btn-success w-100">
-                            <i class="fas fa-ticket-alt"></i> Acheter Ticket
+                    <form action="{{ path('app_event_buy', {'id': event.id}) }}" method="post" onsubmit="return confirm('Confirmer l\'achat du billet ?');">
+                        <button type="submit" class="btn btn-primary btn-lg w-100 py-3 rounded-pill fw-bold">
+                            <i class="fas fa-shopping-cart me-2"></i> Réserver ma place
                         </button>
                     </form>
                 {% elseif is_granted('ROLE_AGENT') or is_granted('ROLE_ADMIN') %}
-                     <div class="alert alert-info">Vue Agent/Admin. <a href="{{ path('app_event_index') }}">Retour à la liste</a></div>
+                    <div class="alert alert-info rounded-pill text-center mb-0">
+                        <i class="fas fa-user-shield me-2"></i> Vue administrateur
+                    </div>
                 {% else %}
-                    <a href="{{ path('app_login') }}" class="btn btn-lg btn-primary w-100">Connectez-vous pour acheter</a>
+                    <a href="{{ path('app_login') }}" class="btn btn-outline-primary btn-lg w-100 py-3 rounded-pill fw-bold">
+                        Se connecter pour réserver
+                    </a>
                 {% endif %}
             </div>
         </div>
     </div>
 </div>
+
+<style>
+    .breadcrumb-item + .breadcrumb-item::before { color: rgba(255,255,255,0.2); }
+    
+    .event-image-container {
+        border: 1px solid rgba(255,255,255,0.1);
+    }
+    
+    .price-badge {
+        position: absolute;
+        bottom: 20px;
+        left: 20px;
+        background: var(--primary);
+        color: white;
+        padding: 10px 25px;
+        border-radius: 50px;
+        font-weight: 800;
+        font-size: 1.2rem;
+        box-shadow: 0 10px 20px rgba(56, 189, 248, 0.4);
+    }
+    
+    .info-pill {
+        background: rgba(255,255,255,0.05);
+        padding: 10px 20px;
+        border-radius: 50px;
+        border: 1px solid rgba(255,255,255,0.1);
+        font-size: 0.95rem;
+        color: var(--text-muted);
+    }
+    
+    .booking-card {
+        background: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.03) 100%);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255,255,255,0.1);
+    }
+</style>
 {% endblock %}

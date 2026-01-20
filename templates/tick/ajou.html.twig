@@ -3,73 +3,75 @@
 {% block title %}{{ form.vars.value.id ? 'Modifier' : 'Nouveau' }} Ticket - TicketFlow{% endblock %}
 
 {% block body %}
-<div class="container">
-    <div style="max-width: 700px; margin: 0 auto;">
-        <div style="margin-bottom: 30px;">
-            <a href="{{ path('app_tick') }}" style="color: var(--text-muted); text-decoration: none; font-size: 0.9rem; display: flex; align-items: center; gap: 8px;">
-                ← Retour à la liste
+<div class="container mt-4" style="max-width: 800px;">
+    <div class="card p-5">
+        <div class="mb-5">
+            <a href="{{ path('app_tick') }}" class="text-muted text-decoration-none mb-3 d-inline-block">
+                <i class="fas fa-arrow-left me-2"></i> Retour à la liste
             </a>
-            <h1 style="font-size: 2rem; font-weight: 700; margin-top: 15px;">
+            <h1 class="fw-bold">
                 {{ form.vars.value.id ? 'Modifier le Ticket #' ~ form.vars.value.id : 'Ouvrir un nouveau Ticket' }}
             </h1>
-            <p style="color: var(--text-muted);">Remplissez les détails ci-dessous.</p>
+            <p class="text-muted">Partagez les détails de votre demande pour obtenir une assistance rapide.</p>
         </div>
 
-        <div class="card">
-            {{ form_start(form) }}
-                <style>
-                    .form-group { margin-bottom: 20px; }
-                    .form-group label { display: block; margin-bottom: 8px; font-weight: 500; font-size: 0.9rem; }
-                    .form-input { 
-                        width: 100%; padding: 12px; background: rgba(15, 23, 42, 0.6); 
-                        border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 10px; 
-                        color: white; font-size: 1rem; transition: border-color 0.3s;
-                    }
-                    .form-input:focus { outline: none; border-color: var(--primary); }
-                    .btn-submit {
-                        width: 100%; padding: 14px; background: var(--primary); 
-                        border: none; border-radius: 12px; color: white; 
-                        font-weight: 600; cursor: pointer; transition: transform 0.2s;
-                    }
-                    .btn-submit:hover { transform: translateY(-2px); background: var(--secondary); }
-                    
-                    /* Customizing form widgets */
-                    input, textarea, select { @extend .form-input; width:100%; padding: 12px; background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 10px; color: white; margin-bottom: 10px;}
-                </style>
+        {{ form_start(form) }}
+            
+            <div class="mb-4">
+                {{ form_label(form.titre, 'Sujet du Ticket') }}
+                {{ form_widget(form.titre, {'attr': {'placeholder': 'Ex: Problème d\'accès au compte'}}) }}
+                {{ form_errors(form.titre) }}
+            </div>
 
-                <div class="form-group">
-                    <label>Sujet du Ticket</label>
-                    {{ form_widget(form.titre, {'attr': {'placeholder': 'Ex: Problème d\'accès au compte'}}) }}
-                </div>
-
-                <div class="form-group">
-                    <label>Priorité</label>
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    {{ form_label(form.priorite) }}
                     {{ form_widget(form.priorite) }}
+                    {{ form_errors(form.priorite) }}
                 </div>
-
-                <div class="form-group">
-                    <label>Catégorie</label>
+                <div class="col-md-6 mb-4">
+                    {{ form_label(form.id_categorie, 'Catégorie') }}
                     {{ form_widget(form.id_categorie) }}
+                    {{ form_errors(form.id_categorie) }}
                 </div>
+            </div>
 
-                <div class="form-group">
-                    <label>Description détaillée</label>
-                    {{ form_widget(form.description, {'attr': {'rows': 6, 'placeholder': 'Décrivez votre problème ici...'}}) }}
+            <div class="mb-4">
+                {{ form_label(form.description, 'Description détaillée') }}
+                {{ form_widget(form.description, {'attr': {'rows': 6, 'placeholder': 'Décrivez votre problème ici...'}}) }}
+                {{ form_errors(form.description) }}
+            </div>
+
+            {% if form.statut is defined %}
+                <div class="mb-4">
+                    {{ form_label(form.statut) }}
+                    {{ form_widget(form.statut) }}
+                    {{ form_errors(form.statut) }}
                 </div>
+            {% endif %}
 
-                {# Only show admin/agent fields if they exist in the form (form_widget handles this but we can be explicit) #}
-                {% if form.statut is defined %}
-                    <div class="form-group">
-                        <label>Statut</label>
-                        {{ form_widget(form.statut) }}
-                    </div>
-                {% endif %}
+            {% if form.id_client is defined %}
+                <div class="mb-4">
+                    {{ form_label(form.id_client, 'Client') }}
+                    {{ form_widget(form.id_client) }}
+                    {{ form_errors(form.id_client) }}
+                </div>
+            {% endif %}
 
-                <button type="submit" class="btn-submit">
-                    {{ form.vars.value.id ? 'Mettre à jour le ticket' : 'Envoyer le ticket' }}
+            {% if form.id_agent is defined %}
+                <div class="mb-4">
+                    {{ form_label(form.id_agent, 'Agent assigné') }}
+                    {{ form_widget(form.id_agent) }}
+                    {{ form_errors(form.id_agent) }}
+                </div>
+            {% endif %}
+
+            <div class="mt-5">
+                <button type="submit" class="btn btn-primary w-100 py-3 rounded-pill fw-bold">
+                    <i class="fas fa-paper-plane me-2"></i> {{ form.vars.value.id ? 'Mettre à jour le ticket' : 'Envoyer le ticket' }}
                 </button>
-            {{ form_end(form) }}
-        </div>
+            </div>
+        {{ form_end(form) }}
     </div>
 </div>
 {% endblock %}

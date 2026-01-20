@@ -39,6 +39,14 @@
                     </a>
                 {% endif %}
                 
+                <a href="{{ path('app_tick_mod', {'id': ticket.id}) }}" class="btn btn-outline-primary px-4 rounded-pill shadow-sm">
+                    <i class="fas fa-edit me-2"></i> Modifier
+                </a>
+
+                <a href="{{ path('app_tick_sup', {'id': ticket.id}) }}" class="btn btn-outline-danger px-4 rounded-pill shadow-sm" onclick="return confirm('Supprimer ce ticket ?')">
+                    <i class="fas fa-trash me-2"></i> Supprimer
+                </a>
+
                 {% if ticket.statut != 'Résolu' %}
                     <a href="{{ path('app_tick_close', {'id': ticket.id}) }}" class="btn btn-danger px-4 rounded-pill shadow-sm">
                         Clôturer

@@ -79,7 +79,9 @@
                     <td style="padding: 15px 20px; color: var(--primary); font-weight: 600;">#{{ t.id }}</td>
                     <td style="padding: 15px 20px;">
                         <div style="font-weight: 500; display: flex; align-items: center; gap: 8px;">
-                            {{ t.titre }}
+                            <a href="{{ path('app_tick_show', {'id': t.id}) }}" style="color: white; text-decoration: none; display: flex; align-items: center; gap: 8px;">
+                                {{ t.titre }}
+                            </a>
                             {% if t.hasUnreadMessagesFor(app.user) %}
                                 <span style="background: #ef4444; color: white; font-size: 0.7rem; padding: 2px 8px; border-radius: 10px; font-weight: 700; animation: pulse 2s infinite;">
                                     Nouveau Message
@@ -124,9 +126,7 @@
                                     <a href="{{ path('app_tick_resoudre', {'id': t.id}) }}" class="btn-action" style="padding: 6px 12px; font-size: 0.8rem; background: #22c55e;">Résoudre</a>
                                 {% endif %}
                                 
-                                <a href="{{ path('app_tick_show', {'id': t.id}) }}" style="color: #38bdf8; text-decoration: none; font-size: 0.9rem; font-weight: 600;" title="Voir le détail">
-                                    <i class="fas fa-eye"></i>
-                                </a>
+                                <a href="{{ path('app_tick_show', {'id': t.id}) }}" class="btn-action" style="padding: 6px 14px; font-size: 0.8rem; background: var(--primary);">Consulter</a>
 
                                 {# Only Admin or Creator can Edit/Delete #}
                                 {% if is_granted('ROLE_ADMIN') or (is_granted('ROLE_AGENT') and t.createur == app.user) %}

@@ -18,11 +18,11 @@ class TicketType extends AbstractType
         $builder
             ->add('titre', null, [
                 'label' => 'Titre de votre demande',
-                'attr' => ['placeholder' => 'Ex: Problème d\'accès au serveur...']
+                'attr' => ['class' => 'form-control', 'placeholder' => 'Ex: Problème d\'accès au serveur...']
             ])
             ->add('description', null, [
                 'label' => 'Description détaillée',
-                'attr' => ['rows' => 6, 'placeholder' => 'Décrivez votre problème ici...']
+                'attr' => ['class' => 'form-control', 'rows' => 6, 'placeholder' => 'Décrivez votre problème ici...']
             ])
             ->add('priorite', ChoiceType::class, [
                 'choices' => [
@@ -30,12 +30,14 @@ class TicketType extends AbstractType
                     'Moyenne' => 'Moyenne',
                     'Haute' => 'Haute',
                 ],
-                'label' => 'Priorité'
+                'label' => 'Priorité',
+                'attr' => ['class' => 'form-select']
             ])
             ->add('id_categorie', EntityType::class, [
                 'class' => Categorie::class,
                 'choice_label' => 'nom',
-                'label' => 'Catégorie'
+                'label' => 'Catégorie',
+                'attr' => ['class' => 'form-select']
             ])
         ;
     }

@@ -4,7 +4,7 @@
 
 {% block body %}
 <div class="container mt-4" style="max-width: 800px;">
-    <div class="card p-5">
+    <div class="glass-card p-5 rounded-4 shadow-lg">
         <div class="mb-5">
             <a href="{{ path('app_tick') }}" class="text-muted text-decoration-none mb-3 d-inline-block">
                 <i class="fas fa-arrow-left me-2"></i> Retour à la liste
@@ -19,7 +19,7 @@
             
             <div class="mb-4">
                 {{ form_label(form.titre, 'Sujet du Ticket') }}
-                {{ form_widget(form.titre, {'attr': {'placeholder': 'Ex: Problème d\'accès au compte'}}) }}
+                {{ form_widget(form.titre) }}
                 {{ form_errors(form.titre) }}
             </div>
 

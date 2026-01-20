@@ -230,4 +230,20 @@ class Ticket
 
         return $this;
     }
+
+    public function hasUnreadMessagesFor(?Utilisateur $user): bool
+    {
+        if (!$user) {
+            return false;
+        }
+
+        foreach ($this->messages as $message) {
+            // If the message is NOT from the user AND is unread, it's a new message for them
+            if ($message->getIdUtilisateur() !== $user && !$message->isRead()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

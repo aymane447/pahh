@@ -4,6 +4,13 @@
 
 {% block body %}
 <div class="container">
+    <style>
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+            70% { transform: scale(1.05); box-shadow: 0 0 0 6px rgba(239, 68, 68, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
+    </style>
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
         <h1 style="font-size: 2rem; font-weight: 700;">Tickets</h1>
         {% if is_granted('ROLE_AGENT') or is_granted('ROLE_ADMIN') %}
@@ -71,7 +78,14 @@
                 <tr style="border-top: 1px solid rgba(255, 255, 255, 0.05); transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.02)'" onmouseout="this.style.background='transparent'">
                     <td style="padding: 15px 20px; color: var(--primary); font-weight: 600;">#{{ t.id }}</td>
                     <td style="padding: 15px 20px;">
-                        <div style="font-weight: 500;">{{ t.titre }}</div>
+                        <div style="font-weight: 500; display: flex; align-items: center; gap: 8px;">
+                            {{ t.titre }}
+                            {% if t.hasUnreadMessagesFor(app.user) %}
+                                <span style="background: #ef4444; color: white; font-size: 0.7rem; padding: 2px 8px; border-radius: 10px; font-weight: 700; animation: pulse 2s infinite;">
+                                    Nouveau Message
+                                </span>
+                            {% endif %}
+                        </div>
                         <div style="font-size: 0.8rem; color: var(--text-muted);">{{ t.description|slice(0, 50) }}...</div>
                     </td>
                     <td style="padding: 15px 20px;">

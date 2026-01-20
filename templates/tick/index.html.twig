@@ -115,7 +115,6 @@
                                 {% if t.idClient is null %}
                                     <a href="{{ path('app_tick_acheter', {'id': t.id}) }}" class="btn-action" style="padding: 6px 14px; font-size: 0.8rem; background: #fbbf24; color: #000;">Acheter</a>
                                 {% endif %}
-                                <a href="{{ path('app_tick_show', {'id': t.id}) }}" class="btn-action" style="padding: 6px 14px; font-size: 0.8rem; background: var(--primary);">Consulter</a>
                             {% endif %}
 
                             {# Actions spécifiques aux Agents/Admins #}
@@ -126,8 +125,6 @@
                                     <a href="{{ path('app_tick_resoudre', {'id': t.id}) }}" class="btn-action" style="padding: 6px 12px; font-size: 0.8rem; background: #22c55e;">Résoudre</a>
                                 {% endif %}
                                 
-                                <a href="{{ path('app_tick_show', {'id': t.id}) }}" class="btn-action" style="padding: 6px 14px; font-size: 0.8rem; background: var(--primary);">Consulter</a>
-
                                 {# Only Admin or Creator can Edit/Delete #}
                                 {% if is_granted('ROLE_ADMIN') or (is_granted('ROLE_AGENT') and t.createur == app.user) %}
                                     <a href="{{ path('app_tick_mod', {'id': t.id}) }}" style="color: var(--primary); text-decoration: none; font-size: 0.9rem;" title="Modifier">
@@ -138,6 +135,9 @@
                                     </a>
                                 {% endif %}
                             {% endif %}
+
+                            {# Universal View Button #}
+                            <a href="{{ path('app_tick_show', {'id': t.id}) }}" class="btn-action" style="padding: 6px 14px; font-size: 0.8rem; background: var(--primary);">Consulter</a>
                         </div>
                     </td>
                 </tr>

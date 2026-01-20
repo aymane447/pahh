@@ -33,7 +33,8 @@ RUN php bin/console assets:install public
 COPY docker-startup.sh /usr/local/bin/docker-startup
 RUN chmod +x /usr/local/bin/docker-startup
 
-ENV APP_ENV=dev
+ENV APP_ENV=prod
+
 ENV TRUSTED_PROXIES=*
 
 CMD ["/usr/local/bin/docker-startup"]

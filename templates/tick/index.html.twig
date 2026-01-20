@@ -10,8 +10,63 @@
             70% { transform: scale(1.05); box-shadow: 0 0 0 6px rgba(239, 68, 68, 0); }
             100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
         }
+
+        /* Mobile Responsive Styles */
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                align-items: flex-start !important;
+                gap: 15px;
+            }
+            .header-container h1 {
+                font-size: 1.5rem !important;
+            }
+            .header-container .btn-action {
+                width: 100%;
+                text-align: center;
+            }
+            form {
+                grid-template-columns: 1fr !important;
+                gap: 10px !important;
+            }
+            thead {
+                display: none;
+            }
+            tbody tr {
+                display: flex;
+                flex-direction: column;
+                background: rgba(255, 255, 255, 0.03);
+                margin-bottom: 20px;
+                border: 1px solid rgba(255, 255, 255, 0.05);
+                border-radius: 12px;
+                padding: 15px;
+            }
+            tbody td {
+                display: block;
+                padding: 5px 0 !important;
+                border: none !important;
+            }
+            tbody td:nth-child(1)::before {
+                content: "ID: ";
+                color: var(--text-muted);
+                font-size: 0.8rem;
+            }
+            tbody td:last-child {
+                margin-top: 15px;
+                padding-top: 15px !important;
+                border-top: 1px solid rgba(255, 255, 255, 0.05) !important;
+            }
+            tbody td:last-child div {
+                justify-content: space-between !important;
+                width: 100%;
+            }
+            tbody td:last-child .btn-action {
+                flex: 1;
+                text-align: center;
+            }
+        }
     </style>
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+    <div class="header-container" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
         <h1 style="font-size: 2rem; font-weight: 700;">Tickets</h1>
         {% if is_granted('ROLE_AGENT') or is_granted('ROLE_ADMIN') %}
             <a href="{{ path('app_tick_ajou') }}" class="btn-action" style="padding: 10px 20px; text-decoration: none;">+ Nouveau Ticket</a>

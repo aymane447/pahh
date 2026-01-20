@@ -175,7 +175,8 @@ final class TickController extends AbstractController
     {
         // Mark messages as read when viewing the ticket
         foreach ($ticket->getMessages() as $message) {
-            if ($message->getIdUtilisateur() !== $this->getUser() && !$message->isRead()) {
+            // Compare IDs to be safe (Proxy vs Entity)
+            if ($message->getIdUtilisateur()->getId() !== $this->getUser()->getId() && !$message->isRead()) {
                 $message->setIsRead(true);
             }
         }

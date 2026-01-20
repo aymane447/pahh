@@ -91,17 +91,30 @@ final class TickController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            if (!$this->isGranted('ROLE_ADMIN')) {
-                // If an agent creates it, we might need a way to assign a client. 
-                // For now, let's assume if an Agent creates it, THEY are the agent, 
-                // and we'll keep the logic simple or just set the agent.
-                $ticket->setIdAgent($this->getUser());
-                $ticket->setCreateur($this->getUser());
-                $ticket->setDateCreation(new \DateTime());
-                $ticket->setDateMise(new \DateTime());
-                $ticket->setStatut('Ouvert');
+            // Ensure defaults are set for EVERYONE (including Admins)
+            if (!$ticket->getIdTicket()) {
                 $ticket->setIdTicket('TKT-' . strtoupper(bin2hex(random_bytes(3))));
             }
+            if (!$ticket->getDateCreation()) {
+                $ticket->setDateCreation(new \DateTime());
+            }
+            if (!$ticket->getDateMise()) {
+                $ticket->setDateMise(new \DateTime());
+            }
+            if (!$ticket->getStatut()) {
+                $ticket->setStatut('Ouvert');
+            }
+
+            // Assign creator if not set
+            if (!$ticket->getCreateur()) {
+                $ticket->setCreateur($this->getUser());
+            }
+
+            // Logic specific to Agents (assigning themselves if they create it)
+            if (!$this->isGranted('ROLE_ADMIN') && !$ticket->getIdAgent()) {
+                $ticket->setIdAgent($this->getUser());
+            }
+
             
             // Set creator for admin creations too if needed, but primarily for agents
             if (!$ticket->getCreateur()) {

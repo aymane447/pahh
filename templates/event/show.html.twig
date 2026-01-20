@@ -1,121 +1,120 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ event.titre }}{% endblock %}
+{% block title %}{{ event.titre }} - TicketFlow{% endblock %}
 
 {% block body %}
-<div class="container mt-5">
+<div class="position-fixed top-0 start-0 w-100 h-100 d-none d-lg-block" style="z-index: -1; opacity: 0.05; background: url('{{ asset('uploads/events/' ~ event.image) }}') center/cover no-repeat; filter: blur(50px);"></div>
+
+<div class="container py-5 animate-fade-in">
+    <nav aria-label="breadcrumb" class="mb-5">
+        <ol class="breadcrumb mb-0">
+            <li class="breadcrumb-item"><a href="{{ path('app_event_index') }}" class="text-primary text-decoration-none small">Events</a></li>
+            <li class="breadcrumb-item active text-muted small" aria-current="page">{{ event.titre }}</li>
+        </ol>
+    </nav>
+
     <div class="row g-5">
-        <!-- Event Image Section -->
-        <div class="col-lg-5">
-            <div class="sticky-top" style="top: 100px;">
-                <div class="event-image-container shadow-lg rounded-4 overflow-hidden" style="position: relative; aspect-ratio: 3/4;">
-                    {% if event.image %}
-                        <img src="{{ asset('uploads/events/' ~ event.image) }}" class="w-100 h-100" style="object-fit: cover;" alt="{{ event.titre }}">
-                    {% else %}
-                        <div class="w-100 h-100 bg-light d-flex align-items-center justify-content-center">
-                            <i class="fas fa-image fa-4x text-muted opacity-25"></i>
-                        </div>
-                    {% endif %}
-                    <div class="price-badge">
-                        {{ event.prix }} MAD
+        <!-- Event Media -->
+        <div class="col-lg-6">
+            <div class="position-sticky" style="top: 100px;">
+                <div class="glass-effect rounded-5 overflow-hidden shadow-2xl p-2">
+                    <div class="rounded-5 overflow-hidden" style="aspect-ratio: 1/1.2;">
+                        {% if event.image %}
+                            <img src="{{ asset('uploads/events/' ~ event.image) }}" class="w-100 h-100" style="object-fit: cover;" alt="{{ event.titre }}">
+                        {% else %}
+                            <div class="w-100 h-100 glass-effect d-flex align-items-center justify-content-center">
+                                <i class="fas fa-image fa-6x text-muted opacity-10"></i>
+                            </div>
+                        {% endif %}
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Event Info Section -->
-        <div class="col-lg-7">
-            <nav aria-label="breadcrumb" class="mb-4">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="{{ path('app_event_index') }}" class="text-primary text-decoration-none">Événements</a></li>
-                    <li class="breadcrumb-item active text-muted" aria-current="page">{{ event.titre }}</li>
-                </ol>
-            </nav>
-
-            <h1 class="display-4 fw-bold mb-4">{{ event.titre }}</h1>
-
-            <div class="d-flex flex-wrap gap-4 mb-5">
-                <div class="info-pill">
-                    <i class="fas fa-calendar-alt text-primary me-2"></i>
-                    <span>{{ event.dateDebut|date('d M Y') }} - {{ event.dateFin|date('d M Y') }}</span>
-                </div>
-                <div class="info-pill">
-                    <i class="fas fa-clock text-primary me-2"></i>
-                    <span>{{ event.dateDebut|date('H:i') }}</span>
-                </div>
-                <div class="info-pill">
-                    <i class="fas fa-map-marker-alt text-primary me-2"></i>
-                    <span>{{ event.lieu }}</span>
-                </div>
-            </div>
-
-            <div class="event-description mb-5 p-4 rounded-4" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05);">
-                <h5 class="fw-bold mb-3 text-primary">À propos de cet événement</h5>
-                <p class="text-muted leading-relaxed" style="white-space: pre-line; font-size: 1.1rem;">{{ event.description }}</p>
-            </div>
-
-            <div class="booking-card p-4 rounded-5 shadow-lg">
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <div>
-                        <h4 class="mb-0 fw-bold">Ticket d'accès</h4>
-                        <small class="text-muted">Billet unique pour l'événement</small>
+        <!-- Event Content -->
+        <div class="col-lg-6">
+            <div class="ps-lg-4">
+                <span class="badge rounded-pill premium-gradient px-3 py-2 mb-4 shadow-sm border-0">ÉVÉNEMENT SPÉCIAL</span>
+                <h1 class="display-3 fw-bold text-white mb-4">{{ event.titre }}</h1>
+                
+                <div class="d-flex align-items-center gap-4 mb-5 text-muted">
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="fas fa-user-circle text-primary"></i>
+                        <span class="small">{{ event.createur.nom }} {{ event.createur.prenom }}</span>
                     </div>
-                    <div class="h3 mb-0 text-primary fw-bold">{{ event.prix }} MAD</div>
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="fas fa-clock text-primary"></i>
+                        <span class="small">Publié {{ event.dateDebut|date('d/m/Y') }}</span>
+                    </div>
                 </div>
 
-                {% if is_granted('ROLE_CLIENT') %}
-                    <form action="{{ path('app_event_buy', {'id': event.id}) }}" method="post" onsubmit="return confirm('Confirmer l\'achat du billet ?');">
-                        <button type="submit" class="btn btn-primary btn-lg w-100 py-3 rounded-pill fw-bold">
-                            <i class="fas fa-shopping-cart me-2"></i> Réserver ma place
-                        </button>
-                    </form>
-                {% elseif is_granted('ROLE_AGENT') or is_granted('ROLE_ADMIN') %}
-                    <div class="alert alert-info rounded-pill text-center mb-0">
-                        <i class="fas fa-user-shield me-2"></i> Vue administrateur
+                <div class="row g-4 mb-5">
+                    <div class="col-sm-6">
+                        <div class="glass-effect p-4 rounded-4 h-100 d-flex flex-column justify-content-center">
+                            <i class="fas fa-calendar-alt text-primary mb-3 h4"></i>
+                            <h6 class="fw-bold text-white mb-1">Date & Heure</h6>
+                            <p class="text-muted small mb-0">{{ event.dateDebut|date('d M Y') }} à {{ event.dateDebut|date('H:i') }}</p>
+                        </div>
                     </div>
-                {% else %}
-                    <a href="{{ path('app_login') }}" class="btn btn-outline-primary btn-lg w-100 py-3 rounded-pill fw-bold">
-                        Se connecter pour réserver
-                    </a>
-                {% endif %}
+                    <div class="col-sm-6">
+                        <div class="glass-effect p-4 rounded-4 h-100 d-flex flex-column justify-content-center">
+                            <i class="fas fa-map-marked-alt text-primary mb-3 h4"></i>
+                            <h6 class="fw-bold text-white mb-1">Lieu</h6>
+                            <p class="text-muted small mb-0">{{ event.lieu }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-5">
+                    <h5 class="fw-bold text-white mb-4 pb-2 border-bottom border-white border-opacity-10 d-inline-block">Détails de l'événement</h5>
+                    <p class="text-muted leading-relaxed" style="white-space: pre-line; font-size: 1.1rem; opacity: 0.8;">{{ event.description }}</p>
+                </div>
+
+                <!-- Booking Card -->
+                <div class="glass-effect p-5 rounded-5 border-primary border-opacity-10 shadow-3xl">
+                    <div class="d-flex justify-content-between align-items-center mb-5">
+                        <div class="lh-sm">
+                            <span class="text-muted small text-uppercase fw-bold opacity-50">Accès Premium</span>
+                            <h5 class="fw-bold text-white mb-0">Billet Standard</h5>
+                        </div>
+                        <div class="text-end">
+                            <span class="display-6 fw-bold text-primary">{{ event.prix }}</span>
+                            <span class="text-primary small fw-bold">MAD</span>
+                        </div>
+                    </div>
+
+                    {% if is_granted('ROLE_CLIENT') %}
+                        <form action="{{ path('app_event_buy', {'id': event.id}) }}" method="post" onsubmit="return confirm('Confirmer la réservation ?');">
+                            <button type="submit" class="btn btn-primary w-100 py-3 rounded-pill fw-bold shadow-lg hover-lift">
+                                <i class="fas fa-bolt me-2"></i> RÉSERVER MAINTENANT
+                            </button>
+                        </form>
+                    {% elseif is_granted('ROLE_AGENT') or is_granted('ROLE_ADMIN') %}
+                        <div class="p-3 glass-effect rounded-4 text-center border-info border-opacity-25">
+                            <i class="fas fa-shield-alt text-info me-2"></i>
+                            <span class="text-info small fw-bold text-uppercase">Outils d'administration actifs</span>
+                        </div>
+                    {% else %}
+                        <a href="{{ path('app_login') }}" class="btn btn-outline-primary btn-lg w-100 py-3 rounded-pill fw-bold shadow-lg hover-lift">
+                            Connectez-vous pour continuer
+                        </a>
+                    {% endif %}
+                    
+                    <p class="text-muted text-center mt-4 mb-0 small opacity-50">
+                        <i class="fas fa-lock me-1"></i> Transaction sécurisée par TicketFlow
+                    </p>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
 <style>
-    .breadcrumb-item + .breadcrumb-item::before { color: rgba(255,255,255,0.2); }
-    
-    .event-image-container {
-        border: 1px solid rgba(255,255,255,0.1);
+    .shadow-3xl {
+        box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.5);
     }
-    
-    .price-badge {
-        position: absolute;
-        bottom: 20px;
-        left: 20px;
-        background: var(--primary);
-        color: white;
-        padding: 10px 25px;
-        border-radius: 50px;
-        font-weight: 800;
-        font-size: 1.2rem;
-        box-shadow: 0 10px 20px rgba(56, 189, 248, 0.4);
-    }
-    
-    .info-pill {
-        background: rgba(255,255,255,0.05);
-        padding: 10px 20px;
-        border-radius: 50px;
-        border: 1px solid rgba(255,255,255,0.1);
-        font-size: 0.95rem;
-        color: var(--text-muted);
-    }
-    
-    .booking-card {
-        background: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.03) 100%);
-        backdrop-filter: blur(20px);
-        border: 1px solid rgba(255,255,255,0.1);
+    .leading-relaxed {
+        line-height: 1.8;
     }
 </style>
 {% endblock %}

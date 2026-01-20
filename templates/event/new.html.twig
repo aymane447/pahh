@@ -1,69 +1,106 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Nouvel Événement{% endblock %}
+{% block title %}Publier un Événement - TicketFlow{% endblock %}
 
 {% block body %}
-<div class="container mt-4" style="max-width: 800px;">
-    <div class="card p-5">
-        <h1 class="mb-4 text-center">Créer un événement</h1>
-        <p class="text-center text-muted mb-5">Remplissez les informations ci-dessous pour publier une nouvelle annonce.</p>
+<div class="container py-5 animate-fade-in">
+    <div class="max-w-4xl mx-auto" style="max-width: 900px;">
+        <div class="text-center mb-5">
+            <h1 class="display-5 fw-bold text-white mb-2">Créer un Nouvel Événement</h1>
+            <p class="text-muted">Mettez votre événement en lumière et commencez à vendre vos billets.</p>
+        </div>
 
-        {{ form_start(form) }}
-            
-            <div class="mb-4">
-                {{ form_label(form.titre) }}
-                {{ form_widget(form.titre) }}
-                {{ form_errors(form.titre) }}
+        <div class="glass-effect p-4 p-md-5 rounded-5 shadow-2xl overflow-hidden position-relative">
+            <div class="position-absolute top-0 end-0 p-4 opacity-10">
+                <i class="fas fa-magic fa-4x text-primary"></i>
             </div>
 
-            <div class="mb-4">
-                {{ form_label(form.description) }}
-                {{ form_widget(form.description) }}
-                {{ form_errors(form.description) }}
-            </div>
-            
-            <div class="row">
-                <div class="col-md-6 mb-4">
-                    {{ form_label(form.date_debut) }}
-                    {{ form_widget(form.date_debut) }}
-                    {{ form_errors(form.date_debut) }}
-                </div>
-                <div class="col-md-6 mb-4">
-                    {{ form_label(form.date_fin) }}
-                    {{ form_widget(form.date_fin) }}
-                    {{ form_errors(form.date_fin) }}
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-md-6 mb-4">
-                    {{ form_label(form.lieu) }}
-                    {{ form_widget(form.lieu) }}
-                    {{ form_errors(form.lieu) }}
-                </div>
-                <div class="col-md-6 mb-4">
-                    {{ form_label(form.prix) }}
-                    <div class="input-group">
-                        {{ form_widget(form.prix) }}
-                        <span class="input-group-text" style="background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.1); color: white;">MAD</span>
+            {{ form_start(form) }}
+                
+                <!-- Section 1: Basic Info -->
+                <div class="mb-5">
+                    <h5 class="fw-bold text-primary mb-4 d-flex align-items-center">
+                        <span class="bg-primary bg-opacity-10 rounded-circle w-32 h-32 d-flex align-items-center justify-content-center me-3" style="width: 35px; height: 35px; font-size: 0.9rem;">1</span>
+                        Informations de base
+                    </h5>
+                    <div class="mb-4">
+                        {{ form_label(form.titre, 'Titre de l\'événement', {'label_attr': {'class': 'form-label fw-bold opacity-75'}}) }}
+                        <div class="input-group">
+                            <span class="input-group-text glass-effect border-end-0" style="border-radius: 12px 0 0 12px;"><i class="fas fa-heading text-muted opacity-50"></i></span>
+                            {{ form_widget(form.titre, {'attr': {'class': 'form-control border-start-0', 'placeholder': 'Ex: Gala de Charité 2026'}}) }}
+                        </div>
+                        {{ form_errors(form.titre) }}
                     </div>
-                    {{ form_errors(form.prix) }}
+
+                    <div class="mb-4">
+                        {{ form_label(form.description, 'Description détaillée', {'label_attr': {'class': 'form-label fw-bold opacity-75'}}) }}
+                        {{ form_widget(form.description, {'attr': {'class': 'form-control', 'rows': 5, 'placeholder': 'Présentez votre événement au public...'}}) }}
+                        {{ form_errors(form.description) }}
+                    </div>
                 </div>
-            </div>
 
-            <div class="mb-4">
-                {{ form_label(form.image) }}
-                {{ form_widget(form.image) }}
-                {{ form_errors(form.image) }}
-                <div class="form-text text-muted">Formats acceptés : JPG, PNG, WEBP (Max 2Mo)</div>
-            </div>
+                <!-- Section 2: Logistics -->
+                <div class="mb-5">
+                    <h5 class="fw-bold text-primary mb-4 d-flex align-items-center">
+                        <span class="bg-primary bg-opacity-10 rounded-circle w-32 h-32 d-flex align-items-center justify-content-center me-3" style="width: 35px; height: 35px; font-size: 0.9rem;">2</span>
+                        Logistique & Prix
+                    </h5>
+                    
+                    <div class="row g-4 mb-4">
+                        <div class="col-md-6">
+                            {{ form_label(form.date_debut, 'Début', {'label_attr': {'class': 'form-label fw-bold opacity-75'}}) }}
+                            {{ form_widget(form.date_debut) }}
+                        </div>
+                        <div class="col-md-6">
+                            {{ form_label(form.date_fin, 'Fin (facultatif)', {'label_attr': {'class': 'form-label fw-bold opacity-75'}}) }}
+                            {{ form_widget(form.date_fin) }}
+                        </div>
+                    </div>
 
-            <div class="d-flex justify-content-between align-items-center mt-5">
-                <a href="{{ path('app_event_index') }}" class="btn btn-outline-secondary px-4">Annuler</a>
-                <button class="btn btn-primary px-5 py-2"><i class="fas fa-save me-2"></i> Publier l'événement</button>
-            </div>
+                    <div class="row g-4 mb-4">
+                        <div class="col-md-7">
+                            {{ form_label(form.lieu, 'Lieu ou URL (si en ligne)', {'label_attr': {'class': 'form-label fw-bold opacity-75'}}) }}
+                            <div class="input-group">
+                                <span class="input-group-text glass-effect border-end-0" style="border-radius: 12px 0 0 12px;"><i class="fas fa-map-marker-alt text-muted opacity-50"></i></span>
+                                {{ form_widget(form.lieu, {'attr': {'class': 'form-control border-start-0', 'placeholder': 'Ex: Palais des Congrès, Paris'}}) }}
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            {{ form_label(form.prix, 'Prix du billet', {'label_attr': {'class': 'form-label fw-bold opacity-75'}}) }}
+                            <div class="input-group">
+                                {{ form_widget(form.prix, {'attr': {'class': 'form-control border-end-0', 'placeholder': '0.00'}}) }}
+                                <span class="input-group-text glass-effect border-start-0 text-primary fw-bold" style="border-radius: 0 12px 12px 0;">MAD</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-        {{ form_end(form) }}
+                <!-- Section 3: Visuals -->
+                <div class="mb-5">
+                    <h5 class="fw-bold text-primary mb-4 d-flex align-items-center">
+                        <span class="bg-primary bg-opacity-10 rounded-circle w-32 h-32 d-flex align-items-center justify-content-center me-3" style="width: 35px; height: 35px; font-size: 0.9rem;">3</span>
+                        Visuel de l'événement
+                    </h5>
+                    <div class="p-4 rounded-4 text-center glass-effect border-dashed position-relative" style="border: 2px dashed rgba(255,255,255,0.1) !important;">
+                        <i class="fas fa-cloud-upload-alt fa-3x text-primary mb-3 opacity-50"></i>
+                        <p class="small text-muted mb-2">Glissez votre image ou cliquez pour parcourir</p>
+                        {{ form_widget(form.image, {'attr': {'class': 'form-control opacity-0 position-absolute top-0 start-0 w-100 h-100', 'style': 'cursor:pointer;'}}) }}
+                        <div class="small fw-bold text-primary">JPG, PNG, WEBP (Max 2Mo)</div>
+                    </div>
+                    {{ form_errors(form.image) }}
+                </div>
+
+                <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-4 mt-5 pt-4 border-top border-white border-opacity-10">
+                    <a href="{{ path('app_event_index') }}" class="text-muted text-decoration-none small hover:text-white">
+                        <i class="fas fa-times me-1"></i> Annuler la création
+                    </a>
+                    <button type="submit" class="btn btn-primary btn-lg rounded-pill px-5 shadow-2xl hover-lift">
+                        <i class="fas fa-rocket me-2"></i> PUBLIER L'ÉVÉNEMENT
+                    </button>
+                </div>
+
+            {{ form_end(form) }}
+        </div>
     </div>
 </div>
 {% endblock %}

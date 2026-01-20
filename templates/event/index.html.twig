@@ -3,81 +3,76 @@
 {% block title %}Événements - TicketFlow{% endblock %}
 
 {% block body %}
-<!-- Hero Section -->
-<div class="position-relative overflow-hidden mb-5 py-5" style="background: radial-gradient(circle at top right, rgba(56, 189, 248, 0.15), transparent), radial-gradient(circle at bottom left, rgba(37, 99, 235, 0.1), transparent);">
-    <div class="container py-5 text-center animate-fade-in">
-        <span class="badge rounded-pill bg-primary bg-opacity-10 text-primary px-3 py-2 mb-3 border border-primary border-opacity-25" style="letter-spacing: 2px;">DÉCOUVREZ</span>
-        <h1 class="display-3 fw-bold text-gradient mb-4">Événements Inoubliables</h1>
-        <p class="lead text-muted mx-auto" style="max-width: 700px;">Explorez les meilleures expériences, des concerts aux conférences, le tout en un seul endroit.</p>
-        
+<div class="container py-5 animate-fade-in">
+    <div class="d-flex justify-content-between align-items-center mb-5">
+        <h1 class="h2 fw-bold text-white mb-0">Événements à ne pas manquer</h1>
         {% if is_granted('ROLE_AGENT') or is_granted('ROLE_ADMIN') %}
-            <div class="mt-5">
-                <a href="{{ path('app_event_new') }}" class="btn btn-primary btn-lg rounded-pill px-5 py-3 shadow-lg hover-lift">
-                    <i class="fas fa-plus-circle me-2"></i> Créer une annonce
-                </a>
-            </div>
+            <a href="{{ path('app_event_new') }}" class="btn btn-primary rounded-pill px-4 shadow-sm">
+                <i class="fas fa-plus me-2"></i> Créer an événement
+            </a>
         {% endif %}
-    </div>
-</div>
-
-<div class="container pb-5">
-    <div class="d-flex justify-content-between align-items-end mb-5">
-        <div>
-            <h2 class="fw-bold h3 mb-1">Annonces à la une</h2>
-            <div class="bg-primary" style="width: 50px; height: 4px; border-radius: 2px;"></div>
-        </div>
-        <div class="text-muted small">Affichage de {{ events|length }} événements</div>
     </div>
 
     <div class="row g-4">
         {% for event in events %}
-            <div class="col-xl-4 col-md-6 animate-fade-in" style="animation-delay: {{ loop.index * 0.1 }}s;">
-                <div class="card h-100 glass-effect border-0 hover-lift overflow-hidden">
-                    <div class="position-relative overflow-hidden" style="height: 250px;">
-                        {% if event.image %}
-                            <img src="{{ asset('uploads/events/' ~ event.image) }}" class="w-100 h-100 event-img" alt="{{ event.titre }}" style="object-fit: cover; transition: transform 0.6s ease;">
-                        {% else %}
-                             <div class="w-100 h-100 glass-effect d-flex align-items-center justify-content-center">
-                                <i class="fas fa-image fa-3x text-muted opacity-25"></i>
-                            </div>
-                        {% endif %}
-                        
-                        <!-- Floating Badges -->
-                        <div class="position-absolute top-0 start-0 p-3">
-                            <div class="glass-effect text-white px-3 py-1 rounded-pill small fw-bold" style="backdrop-filter: blur(8px);">
-                                <i class="fas fa-calendar-alt text-primary me-2"></i>{{ event.dateDebut|date('d M') }}
-                            </div>
+            <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
+                <div class="event-item h-100 d-flex flex-column">
+                    <!-- Creator Header -->
+                    <div class="d-flex align-items-center mb-3 px-1">
+                        <div class="creator-avatar rounded-circle bg-white d-flex align-items-center justify-content-center me-2 overflow-hidden" style="width: 24px; height: 24px;">
+                            <img src="https://ui-avatars.com/api/?name={{ event.createur.nom }}&background=fff&color=000&size=24" alt="Creator">
                         </div>
-                        <div class="position-absolute bottom-0 end-0 p-3">
-                            <div class="premium-gradient text-white px-4 py-2 rounded-4 shadow-lg fw-bold">
-                                {{ event.prix }} MAD
-                            </div>
-                        </div>
+                        <span class="small fw-bold text-white text-uppercase" style="font-size: 0.75rem; letter-spacing: 0.5px; opacity: 0.9;">
+                            {{ event.createur.nom }} {{ event.createur.prenom }}
+                        </span>
                     </div>
-                    
-                    <div class="card-body p-4">
-                        <h5 class="card-title fw-bold mb-3 text-white">{{ event.titre }}</h5>
-                        <div class="d-flex align-items-center gap-3 text-muted small mb-4">
-                            <span class="d-flex align-items-center gap-1"><i class="fas fa-map-marker-alt text-primary"></i> {{ event.lieu }}</span>
-                            <span class="d-flex align-items-center gap-1"><i class="fas fa-clock"></i> {{ event.dateDebut|date('H:i') }}</span>
+
+                    <!-- Image Container -->
+                    <a href="{{ path('app_event_show', {'id': event.id}) }}" class="text-decoration-none flex-grow-1">
+                        <div class="position-relative overflow-hidden rounded-4 shadow-sm mb-3" style="aspect-ratio: 1/1; background: #1a1a1a;">
+                            {% if event.image %}
+                                <img src="{{ asset('uploads/events/' ~ event.image) }}" class="w-100 h-100 event-media" alt="{{ event.titre }}" style="object-fit: cover; transition: transform 0.5s ease;">
+                            {% else %}
+                                <div class="w-100 h-100 d-flex align-items-center justify-content-center opacity-10">
+                                    <i class="fas fa-image fa-3x"></i>
+                                </div>
+                            {% endif %}
+                            
+                            <!-- Price Tag (Optional but useful) -->
+                            <div class="position-absolute bottom-0 start-0 m-2">
+                                <span class="badge bg-dark bg-opacity-75 text-white rounded-2 py-1 px-2 small fw-bold" style="backdrop-filter: blur(4px); font-size: 0.7rem;">
+                                    {{ event.prix }} MAD
+                                </span>
+                            </div>
                         </div>
-                        
-                        <p class="text-muted small mb-4" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.6;">
-                            {{ event.description }}
-                        </p>
-                        
-                        <a href="{{ path('app_event_show', {'id': event.id}) }}" class="btn btn-outline-light border-opacity-10 w-100 py-3 rounded-4 fw-600 stretched-link" style="transition: 0.3s;">
-                            Découvrir l'événement
-                        </a>
+                    </a>
+
+                    <!-- Title -->
+                    <a href="{{ path('app_event_show', {'id': event.id}) }}" class="text-decoration-none">
+                        <h6 class="fw-bold text-white mb-3 text-truncate-2" style="font-size: 0.95rem; line-height: 1.4; height: 2.8rem;">
+                            {{ event.titre }}
+                        </h6>
+                    </a>
+
+                    <!-- Meta Data Footer -->
+                    <div class="mt-auto ps-1">
+                        <div class="d-flex align-items-start gap-2 mb-2 text-muted" style="font-size: 0.85rem;">
+                            <i class="fas fa-map-marker-alt mt-1" style="width: 14px; opacity: 0.6;"></i>
+                            <span class="text-truncate">{{ event.lieu }}</span>
+                        </div>
+                        <div class="d-flex align-items-center gap-2 text-muted" style="font-size: 0.85rem;">
+                            <i class="far fa-calendar-alt" style="width: 14px; opacity: 0.6;"></i>
+                            <span>{{ event.dateDebut|date('d M Y - H:i') }}</span>
+                        </div>
                     </div>
                 </div>
             </div>
         {% else %}
-            <div class="col-12 py-5 text-center">
+            <div class="col-12 text-center py-5">
                 <div class="glass-effect p-5 rounded-5 border-dashed" style="border: 2px dashed rgba(255,255,255,0.1) !important;">
                     <i class="fas fa-calendar-times fa-4x mb-4 text-muted opacity-25"></i>
                     <h3 class="fw-bold">Aucun événement disponible</h3>
-                    <p class="text-muted">La scène est vide pour le moment. Revenez bientôt !</p>
+                    <p class="text-muted">Revenez bientôt pour découvrir nos futures annonces.</p>
                 </div>
             </div>
         {% endfor %}
@@ -85,13 +80,25 @@
 </div>
 
 <style>
-    .event-card:hover .event-img {
-        transform: scale(1.1);
+    .text-truncate-2 {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
     }
-    .btn-outline-light:hover {
-        background: rgba(255,255,255,0.05) !important;
-        border-color: var(--primary) !important;
-        color: var(--primary) !important;
+    .event-media:hover {
+        transform: scale(1.08);
+    }
+    .event-item {
+        transition: transform 0.3s ease;
+    }
+    .event-item:hover {
+        transform: translateY(-5px);
+    }
+    .creator-avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
     }
 </style>
 {% endblock %}

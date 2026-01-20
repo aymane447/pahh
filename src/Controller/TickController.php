@@ -16,9 +16,11 @@ final class TickController extends AbstractController
 {
     #[Route('/', name: 'app_home')]
     #[Route('/home', name: 'app_home_alias')]
-    public function home(): Response
+    public function home(\App\Repository\EventRepository $eventRepository): Response
     {
-        return $this->render('home/pg1.html.twig');
+        return $this->render('home/pg1.html.twig', [
+            'events' => $eventRepository->findAll()
+        ]);
     }
 
     #[Route('/tick', name: 'app_tick')]

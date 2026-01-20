@@ -17,6 +17,10 @@ while [ $COUNT -lt $MAX_RETRIES ]; do
         echo "Seeding database..."
         php bin/console app:seed-database
         
+        # Auto-promote 'ayman' to Admin (as requested)
+        echo "Promoting ayman to Admin..."
+        php bin/console app:promote-user ayman || true
+        
         SUCCESS=1
         break
     fi

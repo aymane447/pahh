@@ -12,6 +12,11 @@ while [ $COUNT -lt $MAX_RETRIES ]; do
     php bin/console doctrine:schema:update --force --complete
     if [ $? -eq 0 ]; then
         echo "Schema update successful!"
+        
+        # Seed the database
+        echo "Seeding database..."
+        php bin/console app:seed-database
+        
         SUCCESS=1
         break
     fi

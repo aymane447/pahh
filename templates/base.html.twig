@@ -119,6 +119,36 @@
         padding: 24px;
         backdrop-filter: blur(5px);
     }
+    /* Mobile Navbar Tweaks */
+    @media (max-width: 768px) {
+        nav {
+            height: 60px;
+            padding: 0 15px;
+        }
+        nav h2 {
+            font-size: 1.2rem;
+            margin-right: 15px;
+        }
+        .nav-links {
+            gap: 10px;
+            overflow-x: auto; /* Allow scrolling if too many links */
+            padding-bottom: 0;
+            -webkit-overflow-scrolling: touch; /* Smooth scroll */
+            flex: 1; /* Take remaining space */
+            justify-content: flex-end; /* Align to right */
+        }
+        .nav-links::-webkit-scrollbar {
+            display: none; /* Hide scrollbar */
+        }
+        .nav-links a {
+            font-size: 0.8rem;
+            padding: 5px 8px;
+            white-space: nowrap; /* Don't wrap text */
+        }
+        .main-content {
+            padding-top: 60px; /* Adjust for smaller header */
+        }
+    }
     </style>
 </head>
 

@@ -60,6 +60,11 @@ class Ticket
     #[ORM\OrderBy(['date_message' => 'ASC'])]
     private Collection $messages;
 
+    #[ORM\ManyToOne(inversedBy: 'tickets')]
+    #[ORM\JoinColumn(nullable: true)]
+    private ?Event $event = null;
+
+
     public function __construct()
     {
         $this->messages = new ArrayCollection();
@@ -245,5 +250,17 @@ class Ticket
         }
 
         return false;
+    }
+
+    public function getEvent(): ?Event
+    {
+        return $this->event;
+    }
+
+    public function setEvent(?Event $event): static
+    {
+        $this->event = $event;
+
+        return $this;
     }
 }

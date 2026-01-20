@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ event.titre }}{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-5">
+            {% if event.image %}
+                <img src="{{ asset('uploads/events/' ~ event.image) }}" class="img-fluid rounded shadow" alt="{{ event.titre }}">
+            {% else %}
+                <div class="bg-light rounded d-flex align-items-center justify-content-center" style="height: 300px;">
+                    <span class="text-muted">Pas d'image</span>
+                </div>
+            {% endif %}
+        </div>
+        <div class="col-md-7">
+            <h1 class="display-4">{{ event.titre }}</h1>
+            <p class="h4 text-primary mt-3">{{ event.prix }} MAD</p>
+            
+            <p class="text-muted mt-3">
+                <i class="fas fa-calendar-alt"></i> Du {{ event.dateDebut|date('d/m/Y H:i') }} au {{ event.dateFin|date('d/m/Y H:i') }}<br>
+                <i class="fas fa-map-marker-alt"></i> {{ event.lieu }}
+            </p>
+
+            <div class="mt-4">
+                <h5>Description</h5>
+                <p>{{ event.description }}</p>
+            </div>
+
+            <div class="mt-5">
+                {% if is_granted('ROLE_CLIENT') %}
+                    <form action="{{ path('app_event_buy', {'id': event.id}) }}" method="post" onsubmit="return confirm('Voulez-vous vraiment acheter un ticket pour cet événement ?');">
+                        <button type="submit" class="btn btn-lg btn-success w-100">
+                            <i class="fas fa-ticket-alt"></i> Acheter Ticket
+                        </button>
+                    </form>
+                {% elseif is_granted('ROLE_AGENT') or is_granted('ROLE_ADMIN') %}
+                     <div class="alert alert-info">Vue Agent/Admin. <a href="{{ path('app_event_index') }}">Retour à la liste</a></div>
+                {% else %}
+                    <a href="{{ path('app_login') }}" class="btn btn-lg btn-primary w-100">Connectez-vous pour acheter</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -57,6 +57,7 @@ class Ticket
      * @var Collection<int, Message>
      */
     #[ORM\OneToMany(targetEntity: Message::class, mappedBy: 'id_ticket')]
+    #[ORM\OrderBy(['date_message' => 'ASC'])]
     private Collection $messages;
 
     public function __construct()

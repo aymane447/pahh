@@ -7,14 +7,15 @@ COUNT=0
 SUCCESS=0
 
 while [ $COUNT -lt $MAX_RETRIES ]; do
-    echo "Attempting migration (Try $((COUNT+1))/$MAX_RETRIES)..."
-    php bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration
+    echo "Attempting schema update (Try $((COUNT+1))/$MAX_RETRIES)..."
+    # Use schema:update to force the database to match the entities (fixes missing tables)
+    php bin/console doctrine:schema:update --force --complete
     if [ $? -eq 0 ]; then
-        echo "Migration successful!"
+        echo "Schema update successful!"
         SUCCESS=1
         break
     fi
-    echo "Migration failed. Retrying in 5 seconds..."
+    echo "Schema update failed. Retrying in 5 seconds..."
     sleep 5
     COUNT=$((COUNT+1))
 done

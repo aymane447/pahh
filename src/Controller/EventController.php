@@ -88,6 +88,11 @@ class EventController extends AbstractController
             throw $this->createAccessDeniedException();
         }
 
+        // Security check: Agents can only edit their own events
+        if (!$this->isGranted('ROLE_ADMIN') && $event->getCreateur() !== $this->getUser()) {
+             throw $this->createAccessDeniedException('Vous ne pouvez modifier que vos propres événements.');
+        }
+
         $form = $this->createForm(EventType::class, $event);
         $form->handleRequest($request);
 
@@ -138,6 +143,11 @@ class EventController extends AbstractController
     {
         if (!$this->isGranted('ROLE_AGENT') && !$this->isGranted('ROLE_ADMIN')) {
             throw $this->createAccessDeniedException();
+        }
+
+        // Security check: Agents can only delete their own events
+        if (!$this->isGranted('ROLE_ADMIN') && $event->getCreateur() !== $this->getUser()) {
+             throw $this->createAccessDeniedException('Vous ne pouvez supprimer que vos propres événements.');
         }
 
         // Check if event has tickets (optional: prevent delete or delete cascade)

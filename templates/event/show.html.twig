@@ -90,9 +90,20 @@
                             </button>
                         </form>
                     {% elseif is_granted('ROLE_AGENT') or is_granted('ROLE_ADMIN') %}
-                        <div class="p-3 glass-effect rounded-4 text-center border-info border-opacity-25">
-                            <i class="fas fa-shield-alt text-info me-2"></i>
-                            <span class="text-info small fw-bold text-uppercase">Outils d'administration actifs</span>
+                        <div class="d-flex flex-column gap-3">
+                            {% if is_granted('ROLE_ADMIN') or (is_granted('ROLE_AGENT') and event.createur == app.user) %}
+                                <a href="{{ path('app_event_edit', {'id': event.id}) }}" class="btn btn-outline-primary py-3 rounded-pill fw-bold hover-lift">
+                                    <i class="fas fa-edit me-2"></i> MODIFIER L'ÉVÉNEMENT
+                                </a>
+                                <a href="{{ path('app_event_delete', {'id': event.id}) }}" class="btn btn-outline-danger py-3 rounded-pill fw-bold hover-lift" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet événement ?');">
+                                    <i class="fas fa-trash me-2"></i> SUPPRIMER L'ÉVÉNEMENT
+                                </a>
+                            {% else %}
+                                <div class="p-3 glass-effect rounded-4 text-center border-info border-opacity-25 opacity-75">
+                                    <i class="fas fa-info-circle text-info me-2"></i>
+                                    <span class="text-info small fw-bold text-uppercase">Lecture seule (Créé par {{ event.createur.nom }})</span>
+                                </div>
+                            {% endif %}
                         </div>
                     {% else %}
                         <a href="{{ path('app_login') }}" class="btn btn-outline-primary btn-lg w-100 py-3 rounded-pill fw-bold shadow-lg hover-lift">

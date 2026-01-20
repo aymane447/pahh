@@ -32,7 +32,7 @@
                             </span>
                         </div>
                         
-                        {% if is_granted('ROLE_AGENT') or is_granted('ROLE_ADMIN') %}
+                        {% if is_granted('ROLE_ADMIN') or (is_granted('ROLE_AGENT') and event.createur == app.user) %}
                             <div class="d-flex gap-2">
                                 <a href="{{ path('app_event_edit', {'id': event.id}) }}" class="text-primary" title="Modifier">
                                     <i class="fas fa-edit" style="font-size: 0.8rem;"></i>

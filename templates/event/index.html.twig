@@ -22,13 +22,26 @@
             <div class="col mb-4">
                 <div class="event-item h-100 d-flex flex-column">
                     <!-- Creator Header -->
-                    <div class="d-flex align-items-center mb-2 px-1">
-                        <div class="creator-avatar rounded-circle bg-white d-flex align-items-center justify-content-center me-2 overflow-hidden shadow-sm" style="width: 22px; height: 22px;">
-                            <img src="https://ui-avatars.com/api/?name={{ event.createur.nom }}&background=fff&color=000&size=22" alt="Creator">
+                    <div class="d-flex align-items-center justify-content-between mb-2 px-1">
+                        <div class="d-flex align-items-center">
+                            <div class="creator-avatar rounded-circle bg-white d-flex align-items-center justify-content-center me-2 overflow-hidden shadow-sm" style="width: 22px; height: 22px;">
+                                <img src="https://ui-avatars.com/api/?name={{ event.createur.nom }}&background=fff&color=000&size=22" alt="Creator">
+                            </div>
+                            <span class="fw-bold text-white text-uppercase" style="font-size: 0.7rem; letter-spacing: 0.5px; opacity: 0.7;">
+                                {{ event.createur.nom }}
+                            </span>
                         </div>
-                        <span class="fw-bold text-white text-uppercase" style="font-size: 0.7rem; letter-spacing: 0.5px; opacity: 0.7;">
-                            {{ event.createur.nom }}
-                        </span>
+                        
+                        {% if is_granted('ROLE_AGENT') or is_granted('ROLE_ADMIN') %}
+                            <div class="d-flex gap-2">
+                                <a href="{{ path('app_event_edit', {'id': event.id}) }}" class="text-primary" title="Modifier">
+                                    <i class="fas fa-edit" style="font-size: 0.8rem;"></i>
+                                </a>
+                                <a href="{{ path('app_event_delete', {'id': event.id}) }}" class="text-danger" title="Supprimer" onclick="return confirm('Supprimer cet événement ?')">
+                                    <i class="fas fa-trash" style="font-size: 0.8rem;"></i>
+                                </a>
+                            </div>
+                        {% endif %}
                     </div>
 
                     <!-- Image Container -->

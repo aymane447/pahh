@@ -81,6 +81,82 @@ class EventController extends AbstractController
         ]);
     }
 
+    #[Route('/{id}/edit', name: 'app_event_edit', methods: ['GET', 'POST'])]
+    public function edit(Request $request, Event $event, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
+    {
+        if (!$this->isGranted('ROLE_AGENT') && !$this->isGranted('ROLE_ADMIN')) {
+            throw $this->createAccessDeniedException();
+        }
+
+        $form = $this->createForm(EventType::class, $event);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            /** @var UploadedFile $imageFile */
+            $imageFile = $form->get('image')->getData();
+
+            if ($imageFile) {
+                $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
+                $safeFilename = $slugger->slug($originalFilename);
+                $newFilename = $safeFilename.'-'.uniqid().'.'.$imageFile->guessExtension();
+
+                try {
+                    $imageFile->move(
+                        $this->getParameter('kernel.project_dir').'/public/uploads/events',
+                        $newFilename
+                    );
+                    
+                    // Optional: remove old image file if it exists
+                    if ($event->getImage()) {
+                        $oldImagePath = $this->getParameter('kernel.project_dir').'/public/uploads/events/'.$event->getImage();
+                        if (file_exists($oldImagePath)) {
+                            unlink($oldImagePath);
+                        }
+                    }
+                } catch (FileException $e) {
+                    // ... handle exception
+                }
+
+                $event->setImage($newFilename);
+            }
+
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Événement mis à jour avec succès.');
+            return $this->redirectToRoute('app_event_index', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->render('event/new.html.twig', [
+            'event' => $event,
+            'form' => $form->createView(),
+            'is_edit' => true,
+        ]);
+    }
+
+    #[Route('/{id}/delete', name: 'app_event_delete', methods: ['POST', 'GET'])]
+    public function delete(Request $request, Event $event, EntityManagerInterface $entityManager): Response
+    {
+        if (!$this->isGranted('ROLE_AGENT') && !$this->isGranted('ROLE_ADMIN')) {
+            throw $this->createAccessDeniedException();
+        }
+
+        // Check if event has tickets (optional: prevent delete or delete cascade)
+        // For now, let's just delete the event image and the event
+        if ($event->getImage()) {
+            $imagePath = $this->getParameter('kernel.project_dir').'/public/uploads/events/'.$event->getImage();
+            if (file_exists($imagePath)) {
+                unlink($imagePath);
+            }
+        }
+
+        $entityManager->remove($event);
+        $entityManager->flush();
+
+        $this->addFlash('success', 'Événement supprimé avec succès.');
+
+        return $this->redirectToRoute('app_event_index', [], Response::HTTP_SEE_OTHER);
+    }
+
     #[Route('/{id}/buy', name: 'app_event_buy', methods: ['POST'])]
     public function buy(Event $event, EntityManagerInterface $entityManager): Response
     {

@@ -23,9 +23,9 @@
         --primary: #38bdf8;
         --secondary: #2563eb;
         --bg-dark: #020617;
-        --card-bg: rgba(255, 255, 255, 0.05);
-        --text-main: #f8fafc;
-        --text-muted: #ffffff;
+        --card-bg: rgba(15, 23, 42, 0.6);
+        --text-main: #ffffff;
+        --text-muted: rgba(255, 255, 255, 0.7);
     }
 
     * {
@@ -115,14 +115,26 @@
         padding: 40px 0;
     }
 
-    /* Standard Card Style */
+    /* Global Card Style - Forced Glassmorphism */
     .card {
-        background: var(--card-bg);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 16px;
+        background: var(--card-bg) !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        border-radius: 16px !important;
         padding: 24px;
-        backdrop-filter: blur(5px);
+        backdrop-filter: blur(12px) !important;
+        -webkit-backdrop-filter: blur(12px) !important;
+        color: white !important;
     }
+
+    /* Premium Glass Effect Utility */
+    .glass-effect, .glass-card {
+        background: rgba(15, 23, 42, 0.6) !important;
+        backdrop-filter: blur(15px) !important;
+        -webkit-backdrop-filter: blur(15px) !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        color: white !important;
+    }
+
     /* Mobile Navbar Tweaks */
     @media (max-width: 768px) {
         nav {
@@ -135,33 +147,43 @@
         }
         .nav-links {
             gap: 10px;
-            overflow-x: auto; /* Allow scrolling if too many links */
+            overflow-x: auto;
             padding-bottom: 0;
-            -webkit-overflow-scrolling: touch; /* Smooth scroll */
-            flex: 1; /* Take remaining space */
-            justify-content: flex-end; /* Align to right */
+            -webkit-overflow-scrolling: touch;
+            flex: 1;
+            justify-content: flex-end;
         }
         .nav-links::-webkit-scrollbar {
-            display: none; /* Hide scrollbar */
+            display: none;
         }
         .nav-links a {
             font-size: 0.8rem;
             padding: 5px 8px;
-            white-space: nowrap; /* Don't wrap text */
+            white-space: nowrap;
         }
         .main-content {
-            padding-top: 60px; /* Adjust for smaller header */
+            padding-top: 60px;
         }
     }
 
-    /* Form Styles */
+    /* Form Styles - Force Dark Theme */
     .form-control, .form-select {
         background-color: rgba(255, 255, 255, 0.05) !important;
         border: 1px solid rgba(255, 255, 255, 0.1) !important;
-        color: var(--text-main) !important;
+        color: white !important;
         padding: 12px 16px;
         border-radius: 12px;
         transition: all 0.3s;
+    }
+
+    /* Force dark background on dropdown options */
+    .form-select option {
+        background-color: #1e293b !important;
+        color: white !important;
+    }
+
+    .form-control::placeholder {
+        color: rgba(255, 255, 255, 0.4) !important;
     }
 
     .form-control:focus, .form-select:focus {
@@ -171,12 +193,11 @@
     }
 
     .text-muted {
-        color: #ffffff !important;
-        opacity: 0.8;
+        color: rgba(255, 255, 255, 0.6) !important;
     }
 
     .form-label {
-        color: var(--text-muted);
+        color: white;
         margin-bottom: 8px;
         font-weight: 500;
         font-size: 0.9rem;
@@ -193,14 +214,6 @@
     .btn-primary:hover {
         opacity: 0.9;
         transform: translateY(-1px);
-    }
-
-    /* Premium UI Utilities */
-    .glass-effect {
-        background: rgba(255, 255, 255, 0.03);
-        backdrop-filter: blur(15px);
-        -webkit-backdrop-filter: blur(15px);
-        border: 1px solid rgba(255, 255, 255, 0.08);
     }
 
     .premium-gradient {

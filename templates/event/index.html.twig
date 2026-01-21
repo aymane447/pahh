@@ -22,23 +22,23 @@
             <div class="col mb-4">
                 <div class="event-item h-100 d-flex flex-column">
                     <!-- Creator Header -->
-                    <div class="d-flex align-items-center justify-content-between mb-2 px-1">
+                    <div class="d-flex align-items-center justify-content-between mb-3 px-1">
                         <div class="d-flex align-items-center">
-                            <div class="creator-avatar rounded-circle bg-white d-flex align-items-center justify-content-center me-2 overflow-hidden shadow-sm" style="width: 22px; height: 22px;">
-                                <img src="https://ui-avatars.com/api/?name={{ event.createur.nom }}&background=fff&color=000&size=22" alt="Creator">
+                            <div class="creator-avatar rounded-circle d-flex align-items-center justify-content-center me-2 overflow-hidden shadow-sm" style="width: 24px; height: 24px; border: 1.5px solid rgba(255,255,255,0.2);">
+                                <img src="https://ui-avatars.com/api/?name={{ event.createur.nom }}&background=38bdf8&color=fff&size=24" alt="Creator">
                             </div>
-                            <span class="fw-bold text-white text-uppercase" style="font-size: 0.7rem; letter-spacing: 0.5px;">
+                            <span class="fw-bold text-white-50 text-uppercase" style="font-size: 0.65rem; letter-spacing: 1px;">
                                 {{ event.createur.nom }}
                             </span>
                         </div>
                         
                         {% if is_granted('ROLE_ADMIN') or (is_granted('ROLE_AGENT') and event.createur == app.user) %}
                             <div class="d-flex gap-2">
-                                <a href="{{ path('app_event_edit', {'id': event.id}) }}" class="text-primary" title="Modifier">
-                                    <i class="fas fa-edit" style="font-size: 0.8rem;"></i>
+                                <a href="{{ path('app_event_edit', {'id': event.id}) }}" class="action-btn-sm text-primary" title="Modifier">
+                                    <i class="far fa-edit"></i>
                                 </a>
-                                <a href="{{ path('app_event_delete', {'id': event.id}) }}" class="text-danger" title="Supprimer" onclick="return confirm('Supprimer cet événement ?')">
-                                    <i class="fas fa-trash" style="font-size: 0.8rem;"></i>
+                                <a href="{{ path('app_event_delete', {'id': event.id}) }}" class="action-btn-sm text-danger" title="Supprimer" onclick="return confirm('Supprimer cet événement ?')">
+                                    <i class="far fa-trash-alt"></i>
                                 </a>
                             </div>
                         {% endif %}
@@ -46,17 +46,17 @@
 
                     <!-- Image Container -->
                     <a href="{{ path('app_event_show', {'id': event.id}) }}" class="text-decoration-none flex-grow-1">
-                        <div class="position-relative overflow-hidden rounded-4 shadow-sm mb-3" style="aspect-ratio: 1/1; background: #1a1a1a;">
+                        <div class="position-relative overflow-hidden rounded-4 shadow-lg mb-3" style="aspect-ratio: 1/1; background: #1a1a1a; border: 1px solid rgba(255,255,255,0.05);">
                             {% if event.image %}
-                                <img src="{{ asset('uploads/events/' ~ event.image) }}" class="w-100 h-100 event-media" alt="{{ event.titre }}" style="object-fit: cover; transition: transform 0.5s ease;">
+                                <img src="{{ asset('uploads/events/' ~ event.image) }}" class="w-100 h-100 event-media" alt="{{ event.titre }}" style="object-fit: cover; transition: transform 0.6s cubic-bezier(0.33, 1, 0.68, 1);">
                             {% else %}
                                 <div class="w-100 h-100 d-flex align-items-center justify-content-center opacity-10">
-                                    <i class="fas fa-image fa-2x"></i>
+                                    <i class="fas fa-image fa-3x"></i>
                                 </div>
                             {% endif %}
                             
-                            <div class="position-absolute bottom-0 start-0 m-2">
-                                <span class="badge bg-dark bg-opacity-75 text-white rounded-2 py-1 px-2 fw-bold" style="backdrop-filter: blur(4px); font-size: 0.65rem;">
+                            <div class="position-absolute top-0 end-0 m-3">
+                                <span class="badge bg-white text-dark rounded-pill py-2 px-3 fw-bold shadow-sm" style="font-size: 0.75rem;">
                                     {{ event.prix }} MAD
                                 </span>
                             </div>
@@ -65,20 +65,20 @@
 
                     <!-- Title -->
                     <a href="{{ path('app_event_show', {'id': event.id}) }}" class="text-decoration-none">
-                        <h6 class="fw-bold text-white mb-2 text-truncate-2" style="font-size: 0.9rem; line-height: 1.4; min-height: 2.5rem;">
+                        <h6 class="fw-bold text-white mb-3 text-truncate-2" style="font-size: 1rem; line-height: 1.5; min-height: 3rem;">
                             {{ event.titre }}
                         </h6>
                     </a>
 
                     <!-- Meta Data Footer -->
                     <div class="mt-auto ps-1">
-                        <div class="d-flex align-items-start gap-2 mb-1 text-white" style="font-size: 0.75rem;">
-                            <i class="fas fa-map-marker-alt mt-1" style="width: 12px;"></i>
-                            <span class="text-truncate text-white">{{ event.lieu }}</span>
+                        <div class="d-flex align-items-center gap-2 mb-2 text-white-50" style="font-size: 0.8rem;">
+                            <i class="fas fa-map-marker-alt text-primary" style="width: 14px;"></i>
+                            <span class="text-truncate">{{ event.lieu }}</span>
                         </div>
-                        <div class="d-flex align-items-center gap-2 text-white" style="font-size: 0.75rem;">
-                            <i class="far fa-calendar-alt" style="width: 12px;"></i>
-                            <span class="text-white">{{ event.dateDebut|date('d M Y') }}</span>
+                        <div class="d-flex align-items-center gap-2 text-white-50" style="font-size: 0.8rem;">
+                            <i class="far fa-calendar-alt text-primary" style="width: 14px;"></i>
+                            <span>{{ event.dateDebut|date('d M Y') }}</span>
                         </div>
                     </div>
                 </div>

@@ -7,8 +7,8 @@
     <!-- Header Section -->
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-4 mb-5">
         <div>
-            <h1 class="display-5 fw-bold mb-1">Tickets</h1>
-            <p class="text-white mb-0">Gérez et suivez vos demandes de support.</p>
+            <h1 class="display-5 fw-bold mb-1 text-white">Tickets</h1>
+            <p class="text-white-50 mb-0">Gérez et suivez vos demandes de support.</p>
         </div>
         {% if is_granted('ROLE_AGENT') or is_granted('ROLE_ADMIN') %}
             <a href="{{ path('app_tick_ajou') }}" class="btn btn-primary px-4 py-2 rounded-pill shadow-sm">
@@ -71,28 +71,28 @@
     </div>
 
     <!-- Tickets List Table -->
-    <div class="card overflow-hidden border-0 shadow-lg rounded-4">
+    <div class="card overflow-hidden border-0 shadow-lg rounded-4" style="background: #fff !important; padding: 0;">
         <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0" style="background: transparent;">
-                <thead style="background: rgba(255, 255, 255, 0.02); color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px;">
+            <table class="table table-hover align-middle mb-0">
+                <thead style="background: #fff; color: #1e293b; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1.5px; border-bottom: 2px solid #f1f5f9;">
                     <tr>
-                        <th class="ps-4">ID</th>
-                        <th>Titre & Description</th>
-                        <th>Statut</th>
-                        <th>Priorité</th>
-                        <th>Créé le</th>
-                        <th class="pe-4 text-end">Actions</th>
+                        <th class="ps-4 py-4">ID</th>
+                        <th class="py-4">Titre & Description</th>
+                        <th class="py-4">Statut</th>
+                        <th class="py-4">Priorité</th>
+                        <th class="py-4">Créé le</th>
+                        <th class="pe-4 py-4 text-end">Actions</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody style="background: #fff;">
                     {% for t in tickets %}
-                    <tr class="ticket-row" style="cursor: pointer;" onclick="window.location.href='{{ path('app_tick_show', {'id': t.id}) }}'">
+                    <tr class="ticket-row" style="cursor: pointer; transition: background 0.2s;" onclick="window.location.href='{{ path('app_tick_show', {'id': t.id}) }}'">
                         <td class="ps-4">
-                            <span class="badge bg-primary bg-opacity-10 text-primary fw-bold">#{{ t.id }}</span>
+                            <span class="badge rounded-pill px-3 py-2" style="background: #eff6ff; color: #3b82f6; font-weight: 700;">#{{ t.id }}</span>
                         </td>
                         <td style="min-width: 300px;">
                             <div class="d-flex align-items-center gap-2">
-                                <span class="fw-bold text-white">{{ t.titre }}</span>
+                                <span class="fw-bold text-dark">{{ t.titre }}</span>
                                 {% if t.hasUnreadMessagesFor(app.user) %}
                                     <span class="badge bg-danger rounded-pill pulse-animation">Nouveau</span>
                                 {% endif %}
@@ -102,48 +102,53 @@
                                     </span>
                                 {% endif %}
                             </div>
-                            <div class="small text-white text-truncate" style="max-width: 250px;">{{ t.description|slice(0, 60) }}...</div>
+                            <div class="small text-muted text-truncate" style="max-width: 250px;">{{ t.description|slice(0, 60) }}...</div>
                         </td>
                         <td>
-                            {% set status_class = t.statut == 'Ouvert' ? 'bg-success' : (t.statut == 'En cours' ? 'bg-warning' : 'bg-secondary') %}
-                            <span class="badge {{ status_class }} bg-opacity-10 text-{{ status_class|split('-')[1] }} rounded-pill border border-{{ status_class|split('-')[1] }} border-opacity-25 px-3 py-2" style="font-size: 0.7rem;">
-                                {{ t.statut|upper }}
+                            {% set status_styles = {
+                                'Ouvert': 'background: #ecfdf5; color: #059669; border: 1px solid #10b98120;',
+                                'En cours': 'background: #fffbeb; color: #d97706; border: 1px solid #f59e0b20;',
+                                'Résolu': 'background: #f1f5f9; color: #64748b; border: 1px solid #94a3b820;'
+                            } %}
+                            {% set current_style = status_styles[t.statut] ?? 'background: #f8fafc; color: #94a3b8;' %}
+                            <span class="badge rounded-pill px-3 py-2 text-uppercase fw-bold" style="{{ current_style }} font-size: 0.65rem; letter-spacing: 0.5px;">
+                                {{ t.statut }}
                             </span>
                         </td>
                         <td>
-                            {% set priority_class = t.priorite|lower == 'haute' ? 'text-danger' : (t.priorite|lower == 'moyenne' ? 'text-warning' : 'text-info') %}
-                            <div class="d-flex align-items-center gap-2 {{ priority_class }}" style="font-size: 0.85rem; font-weight: 600;">
-                                <i class="fas fa-circle" style="font-size: 0.6rem;"></i>
+                            {% set priority_color = t.priorite|lower == 'haute' ? '#ef4444' : (t.priorite|lower == 'moyenne' ? '#f59e0b' : '#0ea5e9') %}
+                            <div class="d-flex align-items-center gap-2 fw-semibold" style="font-size: 0.85rem; color: {{ priority_color }};">
+                                <i class="fas fa-circle" style="font-size: 0.5rem;"></i>
                                 {{ t.priorite }}
                             </div>
                         </td>
                         <td>
-                            <div class="small text-white">{{ t.dateCreation ? t.dateCreation|date('d M Y') : 'N/A' }}</div>
+                            <div class="small text-muted">{{ t.dateCreation ? t.dateCreation|date('d M Y') : 'N/A' }}</div>
                         </td>
                         <td class="pe-4 text-end" onclick="event.stopPropagation();">
-                            <div class="btn-group shadow-sm">
-                                <a href="{{ path('app_tick_show', {'id': t.id}) }}" class="btn btn-sm btn-outline-light border-opacity-10 px-3" title="Voir">
-                                    <i class="fas fa-eye"></i>
+                            <div class="d-flex justify-content-end gap-2">
+                                <a href="{{ path('app_tick_show', {'id': t.id}) }}" class="action-btn" title="Voir">
+                                    <i class="far fa-eye text-muted" style="font-size: 0.9rem;"></i>
                                 </a>
                                 {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_AGENT') %}
-                                    <a href="{{ path('app_tick_mod', {'id': t.id}) }}" class="btn btn-sm btn-outline-light border-opacity-10 px-3" title="Modifier">
-                                        <i class="fas fa-edit text-primary"></i>
+                                    <a href="{{ path('app_tick_mod', {'id': t.id}) }}" class="action-btn" title="Modifier">
+                                        <i class="far fa-edit text-primary" style="font-size: 0.9rem;"></i>
                                     </a>
-                                    <a href="{{ path('app_tick_sup', {'id': t.id}) }}" class="btn btn-sm btn-outline-light border-opacity-10 px-3" onclick="return confirm('Supprimer ce ticket ?')" title="Supprimer">
-                                        <i class="fas fa-trash text-danger"></i>
+                                    <a href="{{ path('app_tick_sup', {'id': t.id}) }}" class="action-btn" onclick="return confirm('Supprimer ce ticket ?')" title="Supprimer">
+                                        <i class="far fa-trash-alt text-danger" style="font-size: 0.9rem;"></i>
                                     </a>
                                 {% endif %}
                                 {% if is_granted('ROLE_CLIENT') and t.idClient is null %}
-                                     <a href="{{ path('app_tick_acheter', {'id': t.id}) }}" class="btn btn-sm btn-warning fw-bold px-3">Acheter</a>
+                                     <a href="{{ path('app_tick_acheter', {'id': t.id}) }}" class="btn btn-sm btn-warning fw-bold px-3 rounded-pill">Acheter</a>
                                 {% endif %}
                             </div>
                         </td>
                     </tr>
                     {% else %}
                     <tr>
-                        <td colspan="6" class="py-5 text-center text-white">
+                        <td colspan="6" class="py-5 text-center text-muted">
                             <div>
-                                <i class="fas fa-inbox fa-3x mb-3 text-white"></i>
+                                <i class="fas fa-inbox fa-3x mb-3 opacity-20"></i>
                                 <p>Aucun ticket trouvé.</p>
                             </div>
                         </td>
@@ -163,7 +168,27 @@
     }
     
     .ticket-row:hover {
-        background-color: rgba(255, 255, 255, 0.01) !important;
+        background-color: #f8fafc !important;
+    }
+
+    .action-btn {
+        width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #fff;
+        border: 1px solid #f1f5f9;
+        border-radius: 8px;
+        text-decoration: none;
+        transition: all 0.2s;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    }
+
+    .action-btn:hover {
+        background: #f1f5f9;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
     }
     
     .pulse-animation {
@@ -174,6 +199,11 @@
         0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
         70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
         100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+    }
+
+    /* Fix for text-muted to be dark enough on white background */
+    .text-muted {
+        color: #64748b !important;
     }
 </style>
 {% endblock %}

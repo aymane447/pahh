@@ -56,7 +56,7 @@ class Ticket
     /**
      * @var Collection<int, Message>
      */
-    #[ORM\OneToMany(targetEntity: Message::class, mappedBy: 'id_ticket')]
+    #[ORM\OneToMany(targetEntity: Message::class, mappedBy: 'id_ticket', cascade: ['remove'], orphanRemoval: true)]
     #[ORM\OrderBy(['date_message' => 'ASC'])]
     private Collection $messages;
 

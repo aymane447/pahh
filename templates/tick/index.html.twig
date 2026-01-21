@@ -71,27 +71,26 @@
     </div>
 
     <!-- Tickets List Table -->
-    <!-- Tickets List Table -->
-    <div class="card overflow-hidden border-0 shadow-lg rounded-4 glass-card" style="padding: 0;">
+    <div class="card overflow-hidden border-0 shadow-lg rounded-4 dark-glass-card" style="padding: 0; background: rgba(15, 23, 42, 0.6) !important; backdrop-filter: blur(12px) !important; -webkit-backdrop-filter: blur(12px) !important; border: 1px solid rgba(255, 255, 255, 0.1) !important;">
         <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0" style="background: transparent;">
-                <thead style="background: rgba(255, 255, 255, 0.02); color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1.5px; border-bottom: 1px solid rgba(255, 255, 255, 0.05);">
+            <table class="table table-hover align-middle mb-0" style="background: transparent !important;">
+                <thead style="background: rgba(255, 255, 255, 0.03) !important; color: #f8fafc !important; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1.5px; border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;">
                     <tr>
-                        <th class="ps-4 py-4">ID</th>
-                        <th class="py-4">Titre & Description</th>
-                        <th class="py-4 text-center">Statut</th>
-                        <th class="py-4">Priorité</th>
-                        <th class="py-4">Créé le</th>
-                        <th class="pe-4 py-4 text-end">Actions</th>
+                        <th class="ps-4 py-4" style="border: none !important;">ID</th>
+                        <th class="py-4" style="border: none !important;">Titre & Description</th>
+                        <th class="py-4 text-center" style="border: none !important;">Statut</th>
+                        <th class="py-4" style="border: none !important;">Priorité</th>
+                        <th class="py-4" style="border: none !important;">Créé le</th>
+                        <th class="pe-4 py-4 text-end" style="border: none !important;">Actions</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody style="border: none !important;">
                     {% for t in tickets %}
-                    <tr class="ticket-row" style="cursor: pointer; transition: all 0.2s;" onclick="window.location.href='{{ path('app_tick_show', {'id': t.id}) }}'">
-                        <td class="ps-4">
-                            <span class="badge rounded-pill px-3 py-2" style="background: rgba(56, 189, 248, 0.1); color: var(--primary); font-weight: 700;">#{{ t.id }}</span>
+                    <tr class="ticket-row" style="cursor: pointer; transition: all 0.2s; background: transparent !important; border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;" onclick="window.location.href='{{ path('app_tick_show', {'id': t.id}) }}'">
+                        <td class="ps-4" style="border: none !important;">
+                            <span class="badge rounded-pill px-3 py-2" style="background: rgba(56, 189, 248, 0.1); color: #38bdf8; font-weight: 700;">#{{ t.id }}</span>
                         </td>
-                        <td style="min-width: 300px;">
+                        <td style="min-width: 300px; border: none !important;">
                             <div class="d-flex align-items-center gap-2">
                                 <span class="fw-bold text-white">{{ t.titre }}</span>
                                 {% if t.hasUnreadMessagesFor(app.user) %}
@@ -105,7 +104,7 @@
                             </div>
                             <div class="small text-white-50 text-truncate" style="max-width: 250px;">{{ t.description|slice(0, 60) }}...</div>
                         </td>
-                        <td class="text-center">
+                        <td class="text-center" style="border: none !important;">
                             {% set status_styles = {
                                 'Ouvert': 'background: rgba(16, 185, 129, 0.1); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.2);',
                                 'En cours': 'background: rgba(245, 158, 11, 0.1); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.2);',
@@ -116,17 +115,17 @@
                                 {{ t.statut }}
                             </span>
                         </td>
-                        <td>
+                        <td style="border: none !important;">
                             {% set priority_color = t.priorite|lower == 'haute' ? '#ef4444' : (t.priorite|lower == 'moyenne' ? '#f59e0b' : '#0ea5e9') %}
                             <div class="d-flex align-items-center gap-2 fw-semibold" style="font-size: 0.85rem; color: {{ priority_color }};">
                                 <i class="fas fa-circle" style="font-size: 0.5rem;"></i>
                                 {{ t.priorite }}
                             </div>
                         </td>
-                        <td>
+                        <td style="border: none !important;">
                             <div class="small text-white-50">{{ t.dateCreation ? t.dateCreation|date('d M Y') : 'N/A' }}</div>
                         </td>
-                        <td class="pe-4 text-end" onclick="event.stopPropagation();">
+                        <td class="pe-4 text-end" style="border: none !important;" onclick="event.stopPropagation();">
                             <div class="d-flex justify-content-end gap-2">
                                 <a href="{{ path('app_tick_show', {'id': t.id}) }}" class="action-btn" title="Voir">
                                     <i class="far fa-eye text-white-50" style="font-size: 0.9rem;"></i>
@@ -147,7 +146,7 @@
                     </tr>
                     {% else %}
                     <tr>
-                        <td colspan="6" class="py-5 text-center text-white-50">
+                        <td colspan="6" class="py-5 text-center text-white-50" style="border: none !important;">
                             <div>
                                 <i class="fas fa-inbox fa-3x mb-3 opacity-20"></i>
                                 <p>Aucun ticket trouvé.</p>
@@ -163,15 +162,18 @@
 
 <style>
     .glass-card {
-        background: rgba(255, 255, 255, 0.03);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.05);
+        background: rgba(255, 255, 255, 0.03) !important;
+        backdrop-filter: blur(10px) !important;
+        -webkit-backdrop-filter: blur(10px) !important;
+        border: 1px solid rgba(255, 255, 255, 0.05) !important;
     }
     
+    .ticket-row {
+        background: transparent !important;
+    }
+
     .ticket-row:hover {
-        background-color: rgba(255, 255, 255, 0.02) !important;
-        transform: scale(1.002);
+        background-color: rgba(255, 255, 255, 0.03) !important;
     }
 
     .action-btn {
@@ -180,17 +182,17 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        background: rgba(255, 255, 255, 0.05);
-        border: 1px solid rgba(255, 255, 255, 0.1);
+        background: rgba(255, 255, 255, 0.05) !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
         border-radius: 8px;
         text-decoration: none;
         transition: all 0.2s;
     }
 
     .action-btn:hover {
-        background: rgba(255, 255, 255, 0.1);
+        background: rgba(255, 255, 255, 0.1) !important;
         transform: translateY(-2px);
-        border-color: rgba(255, 255, 255, 0.2);
+        border-color: rgba(255, 255, 255, 0.2) !important;
     }
     
     .pulse-animation {

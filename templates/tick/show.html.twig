@@ -50,9 +50,11 @@
                 {% endif %}
 
                 {% if ticket.statut != 'Résolu' %}
-                    <a href="{{ path('app_tick_close', {'id': ticket.id}) }}" class="btn btn-danger px-4 rounded-pill shadow-sm">
-                        Clôturer
-                    </a>
+                    {% if is_granted('ROLE_ADMIN') or (is_granted('ROLE_AGENT') and ticket.createur == app.user) %}
+                        <a href="{{ path('app_tick_close', {'id': ticket.id}) }}" class="btn btn-danger px-4 rounded-pill shadow-sm">
+                            Clôturer
+                        </a>
+                    {% endif %}
                 {% endif %}
             {% endif %}
         </div>

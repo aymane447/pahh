@@ -233,8 +233,13 @@ final class TickController extends AbstractController
     #[Route('/tick/close/{id}', name: 'app_tick_close')]
     public function close(Ticket $ticket, EntityManagerInterface $entityManager): Response
     {
-        if (!$this->isGranted('ROLE_AGENT') && !$this->isGranted('ROLE_ADMIN')) {
-            throw $this->createAccessDeniedException();
+        // Security check: Only Admin or the Creator (if Agent) can close
+        $isCreator = $ticket->getCreateur() === $this->getUser();
+        $isAdmin = $this->isGranted('ROLE_ADMIN');
+
+        if (!$isAdmin && !$isCreator) {
+            $this->addFlash('error', 'Vous n\'avez pas les permissions pour clôturer ce ticket (vous n\'êtes pas le créateur).');
+            return $this->redirectToRoute('app_tick_show', ['id' => $ticket->getId()]);
         }
 
         $ticket->setStatut('Résolu');

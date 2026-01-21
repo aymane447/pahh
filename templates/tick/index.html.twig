@@ -7,7 +7,7 @@
     <!-- Header Section -->
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-4 mb-5">
         <div>
-            <h1 class="display-5 fw-bold mb-1 text-white">Tickets</h1>
+            <h1 class="display-5 fw-bold mb-1 text-white">Tickets (DEBUG)</h1>
             <p class="text-white-50 mb-0">Gérez et suivez vos demandes de support.</p>
         </div>
         {% if is_granted('ROLE_AGENT') or is_granted('ROLE_ADMIN') %}
@@ -71,7 +71,7 @@
     </div>
 
     <!-- Tickets List Table -->
-    <div class="card overflow-hidden border-0 shadow-lg rounded-4 dark-glass-card" style="padding: 0; background: rgba(15, 23, 42, 0.6) !important; backdrop-filter: blur(12px) !important; -webkit-backdrop-filter: blur(12px) !important; border: 1px solid rgba(255, 255, 255, 0.1) !important;">
+    <div class="card overflow-hidden border-0 shadow-lg rounded-4 dark-glass-card" style="padding: 0; background: #000000 !important; border: 1px solid rgba(255, 255, 255, 0.1) !important;">
         <div class="table-responsive">
             <table class="table table-hover align-middle mb-0" style="background: transparent !important;">
                 <thead style="background: rgba(255, 255, 255, 0.03) !important; color: #f8fafc !important; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1.5px; border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;">

@@ -137,9 +137,12 @@ final class TickController extends AbstractController
     #[Route('/tick/sup/{id}', name: 'app_tick_sup')]
     public function sup(EntityManagerInterface $entityManager, Ticket $ticket): Response
     {
-        // Security check: Only Admin or Agents can delete
-        if (!$this->isGranted('ROLE_ADMIN') && !$this->isGranted('ROLE_AGENT')) {
-            $this->addFlash('error', 'Vous n\'avez pas les permissions pour supprimer ce ticket.');
+        // Security check: Only Admin or the Creator (if Agent) can delete
+        $isCreator = $ticket->getCreateur() === $this->getUser();
+        $isAdmin = $this->isGranted('ROLE_ADMIN');
+
+        if (!$isAdmin && !$isCreator) {
+            $this->addFlash('error', 'Vous n\'avez pas les permissions pour supprimer ce ticket (vous n\'êtes pas le créateur).');
             return $this->redirectToRoute('app_tick');
         }
 
@@ -245,9 +248,12 @@ final class TickController extends AbstractController
     #[Route('/tick/mod/{id}', name: 'app_tick_mod')]
     public function mod(EntityManagerInterface $entityManager, Request $request, Ticket $ticket): Response
     {
-        // Security check: Only Admin or Agents can edit
-        if (!$this->isGranted('ROLE_ADMIN') && !$this->isGranted('ROLE_AGENT')) {
-            $this->addFlash('error', 'Vous n\'avez pas les permissions pour modifier ce ticket.');
+        // Security check: Only Admin or the Creator (if Agent) can edit
+        $isCreator = $ticket->getCreateur() === $this->getUser();
+        $isAdmin = $this->isGranted('ROLE_ADMIN');
+
+        if (!$isAdmin && !$isCreator) {
+            $this->addFlash('error', 'Vous n\'avez pas les permissions pour modifier ce ticket (vous n\'êtes pas le créateur).');
             return $this->redirectToRoute('app_tick');
         }
 

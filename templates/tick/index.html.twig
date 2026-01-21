@@ -130,7 +130,7 @@
                                 <a href="{{ path('app_tick_show', {'id': t.id}) }}" class="action-btn" title="Voir">
                                     <i class="far fa-eye text-white-50" style="font-size: 0.9rem;"></i>
                                 </a>
-                                {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_AGENT') %}
+                                {% if is_granted('ROLE_ADMIN') or (is_granted('ROLE_AGENT') and t.createur == app.user) %}
                                     <a href="{{ path('app_tick_mod', {'id': t.id}) }}" class="action-btn" title="Modifier">
                                         <i class="far fa-edit text-primary" style="font-size: 0.9rem;"></i>
                                     </a>

@@ -71,28 +71,29 @@
     </div>
 
     <!-- Tickets List Table -->
-    <div class="card overflow-hidden border-0 shadow-lg rounded-4" style="background: #fff !important; padding: 0;">
+    <!-- Tickets List Table -->
+    <div class="card overflow-hidden border-0 shadow-lg rounded-4 glass-card" style="padding: 0;">
         <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0">
-                <thead style="background: #fff; color: #1e293b; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1.5px; border-bottom: 2px solid #f1f5f9;">
+            <table class="table table-hover align-middle mb-0" style="background: transparent;">
+                <thead style="background: rgba(255, 255, 255, 0.02); color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1.5px; border-bottom: 1px solid rgba(255, 255, 255, 0.05);">
                     <tr>
                         <th class="ps-4 py-4">ID</th>
                         <th class="py-4">Titre & Description</th>
-                        <th class="py-4">Statut</th>
+                        <th class="py-4 text-center">Statut</th>
                         <th class="py-4">Priorité</th>
                         <th class="py-4">Créé le</th>
                         <th class="pe-4 py-4 text-end">Actions</th>
                     </tr>
                 </thead>
-                <tbody style="background: #fff;">
+                <tbody>
                     {% for t in tickets %}
-                    <tr class="ticket-row" style="cursor: pointer; transition: background 0.2s;" onclick="window.location.href='{{ path('app_tick_show', {'id': t.id}) }}'">
+                    <tr class="ticket-row" style="cursor: pointer; transition: all 0.2s;" onclick="window.location.href='{{ path('app_tick_show', {'id': t.id}) }}'">
                         <td class="ps-4">
-                            <span class="badge rounded-pill px-3 py-2" style="background: #eff6ff; color: #3b82f6; font-weight: 700;">#{{ t.id }}</span>
+                            <span class="badge rounded-pill px-3 py-2" style="background: rgba(56, 189, 248, 0.1); color: var(--primary); font-weight: 700;">#{{ t.id }}</span>
                         </td>
                         <td style="min-width: 300px;">
                             <div class="d-flex align-items-center gap-2">
-                                <span class="fw-bold text-dark">{{ t.titre }}</span>
+                                <span class="fw-bold text-white">{{ t.titre }}</span>
                                 {% if t.hasUnreadMessagesFor(app.user) %}
                                     <span class="badge bg-danger rounded-pill pulse-animation">Nouveau</span>
                                 {% endif %}
@@ -102,15 +103,15 @@
                                     </span>
                                 {% endif %}
                             </div>
-                            <div class="small text-muted text-truncate" style="max-width: 250px;">{{ t.description|slice(0, 60) }}...</div>
+                            <div class="small text-white-50 text-truncate" style="max-width: 250px;">{{ t.description|slice(0, 60) }}...</div>
                         </td>
-                        <td>
+                        <td class="text-center">
                             {% set status_styles = {
-                                'Ouvert': 'background: #ecfdf5; color: #059669; border: 1px solid #10b98120;',
-                                'En cours': 'background: #fffbeb; color: #d97706; border: 1px solid #f59e0b20;',
-                                'Résolu': 'background: #f1f5f9; color: #64748b; border: 1px solid #94a3b820;'
+                                'Ouvert': 'background: rgba(16, 185, 129, 0.1); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.2);',
+                                'En cours': 'background: rgba(245, 158, 11, 0.1); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.2);',
+                                'Résolu': 'background: rgba(148, 163, 184, 0.1); color: #94a3b8; border: 1px solid rgba(148, 163, 184, 0.2);'
                             } %}
-                            {% set current_style = status_styles[t.statut] ?? 'background: #f8fafc; color: #94a3b8;' %}
+                            {% set current_style = status_styles[t.statut] ?? 'background: rgba(255, 255, 255, 0.05); color: #94a3b8;' %}
                             <span class="badge rounded-pill px-3 py-2 text-uppercase fw-bold" style="{{ current_style }} font-size: 0.65rem; letter-spacing: 0.5px;">
                                 {{ t.statut }}
                             </span>
@@ -123,12 +124,12 @@
                             </div>
                         </td>
                         <td>
-                            <div class="small text-muted">{{ t.dateCreation ? t.dateCreation|date('d M Y') : 'N/A' }}</div>
+                            <div class="small text-white-50">{{ t.dateCreation ? t.dateCreation|date('d M Y') : 'N/A' }}</div>
                         </td>
                         <td class="pe-4 text-end" onclick="event.stopPropagation();">
                             <div class="d-flex justify-content-end gap-2">
                                 <a href="{{ path('app_tick_show', {'id': t.id}) }}" class="action-btn" title="Voir">
-                                    <i class="far fa-eye text-muted" style="font-size: 0.9rem;"></i>
+                                    <i class="far fa-eye text-white-50" style="font-size: 0.9rem;"></i>
                                 </a>
                                 {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_AGENT') %}
                                     <a href="{{ path('app_tick_mod', {'id': t.id}) }}" class="action-btn" title="Modifier">
@@ -146,7 +147,7 @@
                     </tr>
                     {% else %}
                     <tr>
-                        <td colspan="6" class="py-5 text-center text-muted">
+                        <td colspan="6" class="py-5 text-center text-white-50">
                             <div>
                                 <i class="fas fa-inbox fa-3x mb-3 opacity-20"></i>
                                 <p>Aucun ticket trouvé.</p>
@@ -164,11 +165,13 @@
     .glass-card {
         background: rgba(255, 255, 255, 0.03);
         backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
         border: 1px solid rgba(255, 255, 255, 0.05);
     }
     
     .ticket-row:hover {
-        background-color: #f8fafc !important;
+        background-color: rgba(255, 255, 255, 0.02) !important;
+        transform: scale(1.002);
     }
 
     .action-btn {
@@ -177,18 +180,17 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        background: #fff;
-        border: 1px solid #f1f5f9;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
         border-radius: 8px;
         text-decoration: none;
         transition: all 0.2s;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.02);
     }
 
     .action-btn:hover {
-        background: #f1f5f9;
+        background: rgba(255, 255, 255, 0.1);
         transform: translateY(-2px);
-        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        border-color: rgba(255, 255, 255, 0.2);
     }
     
     .pulse-animation {
@@ -199,11 +201,6 @@
         0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
         70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
         100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
-    }
-
-    /* Fix for text-muted to be dark enough on white background */
-    .text-muted {
-        color: #64748b !important;
     }
 </style>
 {% endblock %}

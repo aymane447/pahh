@@ -58,10 +58,15 @@
     }
 
     nav h2 {
-        font-weight: 700;
-        letter-spacing: -0.5px;
-        color: var(--primary);
-        font-size: 1.5rem;
+        display: flex;
+        align-items: center;
+        margin: 0;
+    }
+
+    .nav-logo {
+        height: 45px;
+        width: auto;
+        object-fit: contain;
     }
 
     .nav-links {
@@ -249,7 +254,9 @@
 <body>
 
 <nav>
-    <h2>Ticket<span style="color:#fff">Flow</span></h2>
+    <a href="{{ path('app_home') }}" style="text-decoration: none;">
+        <h2><img src="{{ asset('image/logo.png') }}" alt="TicketFlow" class="nav-logo"></h2>
+    </a>
     <div class="nav-links">
         <a href="{{ path('app_home') }}">Home</a>
         <a href="{{ path('app_dashboard') }}">Dashboard</a>

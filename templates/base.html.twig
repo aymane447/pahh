@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>{% block title %}TicketFlow - Gestion de Tickets{% endblock %}</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -55,9 +55,9 @@
         position: fixed;
         top: 0;
         left: 0;
-        height: 75px; 
+        height: calc(75px + env(safe-area-inset-top)); 
+        padding: env(safe-area-inset-top) 5% 0;
         width: 100%;
-        padding: 0 5%;
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -112,7 +112,7 @@
 
     /* ===== MAIN CONTENT ===== */
     .main-content {
-        padding-top: 75px;
+        padding-top: calc(75px + env(safe-area-inset-top));
         min-height: 100vh;
         width: 100%;
     }
@@ -148,8 +148,8 @@
     /* Mobile Navbar Tweaks */
     @media (max-width: 768px) {
         nav {
-            height: 60px;
-            padding: 0 15px;
+            height: calc(60px + env(safe-area-inset-top));
+            padding: env(safe-area-inset-top) 15px 0;
         }
         nav h2 {
             font-size: 1.2rem;
@@ -172,7 +172,7 @@
             white-space: nowrap;
         }
         .main-content {
-            padding-top: 60px;
+            padding-top: calc(60px + env(safe-area-inset-top));
         }
     }
 

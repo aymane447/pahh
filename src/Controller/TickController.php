@@ -14,8 +14,8 @@ use App\Entity\Categorie;
 
 final class TickController extends AbstractController
 {
-    #[Route('/', name: 'app_home')]
-    #[Route('/home', name: 'app_home_alias')]
+    #[Route('/home', name: 'app_home')]
+    #[Route('/home_alias', name: 'app_home_alias')]
     public function home(\App\Repository\EventRepository $eventRepository): Response
     {
         return $this->render('home/pg1.html.twig', [

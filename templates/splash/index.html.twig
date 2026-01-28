@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TicketFlow - Bienvenue</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #38bdf8;
+            --bg: #020617;
+            --accent: #2563eb;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            background: radial-gradient(circle at top right, #1e293b, #020617);
+            transition: opacity 0.8s ease-in-out;
+        }
+
+        .splash-container {
+            text-align: center;
+            animation: fadeIn 1.2s ease-out;
+        }
+
+        .logo-box {
+            width: 160px;
+            height: 160px;
+            background: white;
+            border-radius: 35px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 30px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5),
+                        0 0 30px rgba(56, 189, 248, 0.3);
+            position: relative;
+            animation: pulse 3s infinite ease-in-out;
+        }
+
+        .logo-box img {
+            width: 100px;
+            height: auto;
+            transform: scale(1);
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            color: white;
+            letter-spacing: -1px;
+            margin-bottom: 10px;
+            opacity: 0;
+            animation: slideUp 0.8s forwards 0.5s;
+        }
+
+        h1 span {
+            color: var(--primary);
+        }
+
+        p {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+            opacity: 0;
+            animation: slideUp 0.8s forwards 0.8s;
+        }
+
+        .loader {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-top: 3px solid var(--primary);
+            border-radius: 50%;
+            margin: 40px auto 0;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { 
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), 0 0 30px rgba(56, 189, 248, 0.3); }
+            50% { transform: scale(1.05); box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6), 0 0 50px rgba(56, 189, 248, 0.5); }
+            100% { transform: scale(1); box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), 0 0 30px rgba(56, 189, 248, 0.3); }
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .fade-out {
+            opacity: 0;
+        }
+
+        /* Decorative blobs */
+        .blob {
+            position: fixed;
+            width: 500px;
+            height: 500px;
+            background: var(--accent);
+            filter: blur(100px);
+            border-radius: 50%;
+            z-index: -1;
+            opacity: 0.2;
+        }
+
+        .blob-1 { top: -200px; left: -200px; }
+        .blob-2 { bottom: -200px; right: -200px; }
+
+    </style>
+</head>
+<body>
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+
+    <div class="splash-container">
+        <div class="logo-box">
+            <img src="{{ asset('image/logo.png') }}" alt="TicketFlow Logo">
+        </div>
+        <h1>Ticket<span>Flow</span></h1>
+        <p>PLATEFORME DE GESTION PROFESSIONNELLE</p>
+        <div class="loader"></div>
+    </div>
+
+    <script>
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.body.classList.add('fade-out');
+                setTimeout(() => {
+                    window.location.href = "{{ path('app_home') }}";
+                }, 800);
+            }, 3000);
+        });
+    </script>
+</body>
+</html>

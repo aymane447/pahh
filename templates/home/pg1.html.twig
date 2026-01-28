@@ -248,6 +248,17 @@
             font-size: 1.8rem;
             margin-bottom: 40px;
         }
+
+        .newsletter-form {
+            flex-direction: column;
+            gap: 15px;
+        }
+        .newsletter-form input {
+            width: 100% !important;
+        }
+        .newsletter-form button {
+            width: 100%;
+        }
     }
 </style>
 
@@ -506,9 +517,9 @@
 <section class="section-padding" style="background: linear-gradient(135deg, rgba(56, 189, 248, 0.1), transparent); border-radius: 40px; margin: 0 8% 100px 8%; text-align: center;">
     <h2>Prêt à optimiser votre support ?</h2>
     <p style="margin: 20px 0 40px 0; color: var(--text-muted);">Rejoignez plus de 2 500 entreprises qui font confiance à TicketFlow.</p>
-    <div style="display: flex; justify-content: center; gap: 15px;">
-        <input type="email" placeholder="Votre email..." style="padding: 15px 25px; border-radius: 50px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.3); color: white; width: 300px;">
-        <button class="btn-hero">S'abonner</button>
+    <div class="newsletter-form" style="display: flex; justify-content: center; gap: 15px; max-width: 500px; margin: 0 auto;">
+        <input type="email" placeholder="Votre email..." style="padding: 15px 25px; border-radius: 50px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.3); color: white; width: 300px; outline: none; transition: 0.3s;">
+        <button class="btn-hero" style="white-space: nowrap;">S'abonner</button>
     </div>
 </section>
 

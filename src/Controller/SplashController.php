@@ -13,4 +13,10 @@ final class SplashController extends AbstractController
     {
         return $this->render('splash/index.html.twig');
     }
+
+    #[Route('/offline', name: 'app_offline')]
+    public function offline(): Response
+    {
+        return $this->render('offline.html.twig');
+    }
 }

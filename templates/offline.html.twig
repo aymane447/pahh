@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hors ligne - TicketFlow{% endblock %}
+
+{% block body %}
+<div class="container animate-fade-in">
+    <div class="row min-vh-75 align-items-center justify-content-center">
+        <div class="col-md-8 text-center">
+            <div class="card glass-card p-5">
+                <div class="mb-4">
+                    <i class="fas fa-wifi-slash fa-5x text-primary mb-3"></i>
+                </div>
+                <h1 class="display-4 fw-bold text-gradient mb-3">Vous êtes hors ligne</h1>
+                <p class="lead text-muted mb-4">
+                    Il semble que vous ayez perdu votre connexion internet. 
+                    Certaines fonctionnalités peuvent être limitées, mais vous pouvez toujours accéder aux pages que vous avez consultées récemment.
+                </p>
+                <div class="d-flex justify-content-center gap-3">
+                    <button onclick="window.location.reload()" class="btn btn-primary px-4 py-2">
+                        <i class="fas fa-sync-alt me-2"></i> Réessayer
+                    </button>
+                    <a href="{{ path('app_home') }}" class="btn btn-outline-light px-4 py-2">
+                        <i class="fas fa-home me-2"></i> Accueil
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.min-vh-75 {
+    min-height: 75vh;
+}
+</style>
+{% endblock %}

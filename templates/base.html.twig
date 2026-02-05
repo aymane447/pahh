@@ -315,6 +315,10 @@
             navigator.serviceWorker.register('/sw.js')
                 .then(registration => {
                     console.log('SW registered: ', registration);
+                    // Optional: show a small notification that the app is ready for offline use
+                    if (registration.active) {
+                        console.log('App ready for offline use');
+                    }
                 })
                 .catch(registrationError => {
                     console.log('SW registration failed: ', registrationError);

@@ -31,18 +31,19 @@ self.addEventListener('activate', (event) => {
                     }
                 })
             );
-        })
+        }).then(() => self.clients.claim())
     );
-    self.clients.claim();
 });
 
 self.addEventListener('fetch', (event) => {
-    // Strategy: Network First, falling back to cache
-    if (event.request.mode === 'navigate') {
+    // We only want to handle GET requests
+    if (event.request.method !== 'GET') return;
+
+    // Strategy: Network First, falling back to cache for HTML
+    if (event.request.mode === 'navigate' || (event.request.headers.get('accept') && event.request.headers.get('accept').includes('text/html'))) {
         event.respondWith(
             fetch(event.request)
                 .then((response) => {
-                    // Update cache with the latest version
                     const copy = response.clone();
                     caches.open(CACHE_NAME).then((cache) => {
                         cache.put(event.request, copy);
@@ -50,18 +51,27 @@ self.addEventListener('fetch', (event) => {
                     return response;
                 })
                 .catch(() => {
-                    // If network fails, try to get from cache
                     return caches.match(event.request).then((response) => {
                         return response || caches.match(OFFLINE_URL);
                     });
                 })
         );
-    } else {
-        // For static assets: Cache First
-        event.respondWith(
-            caches.match(event.request).then((response) => {
-                return response || fetch(event.request);
-            })
-        );
+        return;
     }
+
+    // For everything else: Cache First, falling back to network
+    event.respondWith(
+        caches.match(event.request).then((response) => {
+            return response || fetch(event.request).then((networkResponse) => {
+                // Optionally cache successfully fetched static assets
+                if (networkResponse && networkResponse.status === 200) {
+                    const copy = networkResponse.clone();
+                    caches.open(CACHE_NAME).then((cache) => {
+                        cache.put(event.request, copy);
+                    });
+                }
+                return networkResponse;
+            });
+        })
+    );
 });

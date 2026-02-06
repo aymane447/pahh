@@ -406,6 +406,7 @@ final class TickController extends AbstractController
 
         // Send Purchase Confirmation Email
         if ($this->getUser()->getEmail()) {
+            $this->addFlash('info', 'DEBUG: Tentative envoi email à ' . $this->getUser()->getEmail());
             try {
                 $email = (new TemplatedEmail())
                     ->from(new Address('no-reply@ticketflow.com', 'TicketFlow Sales'))

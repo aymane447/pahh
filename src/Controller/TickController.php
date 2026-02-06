@@ -261,7 +261,7 @@ final class TickController extends AbstractController
                         ]);
                     $mailer->send($email);
                 } catch (\Exception $e) {
-                    // Ignorer les erreurs d'envoi pour ne pas bloquer le chat
+                    $this->addFlash('warning', 'Erreur envoi email: ' . $e->getMessage());
                 }
             }
         }
@@ -315,7 +315,7 @@ final class TickController extends AbstractController
                     ]);
                 $mailer->send($email);
             } catch (\Exception $e) {
-                // Ignorer erreurs
+                $this->addFlash('warning', 'Erreur envoi email: ' . $e->getMessage());
             }
         }
 
@@ -383,7 +383,7 @@ final class TickController extends AbstractController
                         ]);
                     $mailer->send($email);
                 } catch (\Exception $e) {
-                    // Ignorer
+                    $this->addFlash('warning', 'Erreur envoi email: ' . $e->getMessage());
                 }
             }
         }
@@ -418,7 +418,7 @@ final class TickController extends AbstractController
                     ]);
                 $mailer->send($email);
             } catch (\Exception $e) {
-                // Ignore errors
+                $this->addFlash('warning', 'Erreur envoi email: ' . $e->getMessage());
             }
         }
 

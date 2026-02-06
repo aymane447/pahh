@@ -391,7 +391,7 @@ final class TickController extends AbstractController
     }
 
     #[Route('/tick/{id}/acheter', name: 'app_tick_acheter')]
-    public function acheter(Ticket $ticket, EntityManagerInterface $entityManager): Response
+    public function acheter(Ticket $ticket, EntityManagerInterface $entityManager, MailerInterface $mailer): Response
     {
         // Only for Clients and only if the ticket has no owner
         if (!$this->isGranted('ROLE_CLIENT') || $ticket->getIdClient() !== null) {
@@ -403,6 +403,24 @@ final class TickController extends AbstractController
         $ticket->setStatut('En cours');
         $ticket->setDateMise(new \DateTime());
         $entityManager->flush();
+
+        // Send Purchase Confirmation Email
+        if ($this->getUser()->getEmail()) {
+            try {
+                $email = (new TemplatedEmail())
+                    ->from(new Address('no-reply@ticketflow.com', 'TicketFlow Sales'))
+                    ->to($this->getUser()->getEmail())
+                    ->subject('Confirmation d\'achat - Ticket #' . $ticket->getIdTicket())
+                    ->htmlTemplate('emails/ticket_purchased.html.twig')
+                    ->context([
+                        'user' => $this->getUser(),
+                        'ticket' => $ticket,
+                    ]);
+                $mailer->send($email);
+            } catch (\Exception $e) {
+                // Ignore errors
+            }
+        }
 
         $this->addFlash('success', 'Félicitations ! Vous avez acheté ce ticket.');
         return $this->redirectToRoute('app_tick_show', ['id' => $ticket->getId()]);

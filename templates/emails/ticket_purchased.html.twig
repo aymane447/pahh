@@ -1,0 +1,20 @@
+{% extends 'emails/base_email.html.twig' %}
+
+{% block body %}
+    <h2>Confirmation d'achat</h2>
+    <p>Félicitations {{ user.prenom }} {{ user.nom }},</p>
+    
+    <p>Vous avez acheté le ticket <strong>#{{ ticket.idTicket }}</strong> avec succès.</p>
+    
+    <div class="info-box">
+        <strong>Titre :</strong> {{ ticket.titre }}<br>
+        <strong>Prix :</strong> Payé<br>
+        <strong>Date :</strong> {{ "now"|date("d/m/Y H:i") }}
+    </div>
+
+    <p>Vous pouvez retrouver ce ticket dans votre espace personnel.</p>
+    
+    <center>
+        <a href="{{ url('app_tick_show', {'id': ticket.id}) }}" class="btn">Voir mon ticket</a>
+    </center>
+{% endblock %}

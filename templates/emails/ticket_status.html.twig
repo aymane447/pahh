@@ -1,0 +1,20 @@
+{% extends 'emails/base_email.html.twig' %}
+
+{% block body %}
+    <h2>Mise à jour du statut</h2>
+    <p>Bonjour {{ user.prenom }} {{ user.nom }},</p>
+    
+    <p>Le statut de votre ticket <strong>#{{ ticket.idTicket }}</strong> a changé.</p>
+    
+    <div class="info-box">
+        <strong>Nouveau statut :</strong> <span style="color: #2563eb; font-weight: bold;">{{ ticket.statut }}</span>
+    </div>
+
+    {% if ticket.statut == 'Résolu' %}
+        <p>Nous espérons que la solution apportée vous satisfait. Si ce n'est pas le cas, vous pouvez rouvrir le ticket en répondant au message.</p>
+    {% endif %}
+
+    <center>
+        <a href="{{ url('app_tick_show', {'id': ticket.id}) }}" class="btn">Consulter le ticket</a>
+    </center>
+{% endblock %}

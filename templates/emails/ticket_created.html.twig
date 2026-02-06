@@ -1,0 +1,20 @@
+{% extends 'emails/base_email.html.twig' %}
+
+{% block body %}
+    <h2>Confirmation de réception</h2>
+    <p>Bonjour {{ user.prenom }} {{ user.nom }},</p>
+    
+    <p>Votre ticket a bien été créé et enregistré dans notre système.</p>
+    
+    <div class="info-box">
+        <strong>Référence :</strong> #{{ ticket.idTicket }}<br>
+        <strong>Sujet :</strong> {{ ticket.titre }}<br>
+        <strong>Priorité :</strong> {{ ticket.priorite }}
+    </div>
+
+    <p>Un agent va prendre en charge votre demande dans les plus brefs délais.</p>
+    
+    <center>
+        <a href="{{ url('app_tick_show', {'id': ticket.id}) }}" class="btn">Voir mon ticket</a>
+    </center>
+{% endblock %}

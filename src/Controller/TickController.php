@@ -11,6 +11,9 @@ use App\Repository\TicketRepository;
 use Symfony\Component\HttpFoundation\Request;
 use App\Entity\Message;
 use App\Entity\Categorie;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
+use Symfony\Component\Mime\Address;
 
 final class TickController extends AbstractController
 {
@@ -70,7 +73,7 @@ final class TickController extends AbstractController
     }
 
     #[Route('/tick/ajou', name: 'app_tick_ajou')]
-    public function ajoutt(EntityManagerInterface $entityManager, Request $request): Response
+    public function ajoutt(EntityManagerInterface $entityManager, Request $request, MailerInterface $mailer): Response
     {
         // Permission check: Only Agents and Admins can create tickets
         if (!$this->isGranted('ROLE_AGENT') && !$this->isGranted('ROLE_ADMIN')) {
@@ -125,6 +128,23 @@ final class TickController extends AbstractController
             
             $entityManager->persist($ticket);
             $entityManager->flush();
+            
+            $entityManager->persist($ticket);
+            $entityManager->flush();
+            
+            // Email de confirmation
+            if ($ticket->getCreateur() && $ticket->getCreateur()->getEmail()) {
+                $email = (new TemplatedEmail())
+                    ->from(new Address('no-reply@ticketflow.com', 'TicketFlow Ops'))
+                    ->to($ticket->getCreateur()->getEmail())
+                    ->subject('Confirmation de création de ticket #' . $ticket->getIdTicket())
+                    ->htmlTemplate('emails/ticket_created.html.twig')
+                    ->context([
+                        'user' => $ticket->getCreateur(),
+                        'ticket' => $ticket,
+                    ]);
+                $mailer->send($email);
+            }
             
             $this->addFlash('success', 'Le ticket a été créé avec succès.');
             return $this->redirectToRoute('app_tick');
@@ -193,7 +213,7 @@ final class TickController extends AbstractController
     }
 
     #[Route('/tick/message/{id}', name: 'app_tick_message', methods: ['POST'])]
-    public function addMessage(Ticket $ticket, Request $request, EntityManagerInterface $entityManager): Response
+    public function addMessage(Ticket $ticket, Request $request, EntityManagerInterface $entityManager, MailerInterface $mailer): Response
     {
         $contenu = $request->request->get('contenu');
         if ($contenu) {
@@ -209,6 +229,41 @@ final class TickController extends AbstractController
             // Update ticket update date
             $ticket->setDateMise(new \DateTime());
             $entityManager->flush();
+
+            // Notification Email Logic
+            $expediteur = $this->getUser();
+            $destinataire = null;
+            $client = $ticket->getIdClient();
+            $agent = $ticket->getIdAgent();
+
+            if ($client && $expediteur->getId() === $client->getId()) {
+                // Client writes -> notify Agent (if assigned)
+                if ($agent) {
+                    $destinataire = $agent;
+                }
+            } else {
+                // Agent/Admin writes -> notify Client
+                if ($client) {
+                    $destinataire = $client;
+                }
+            }
+
+            if ($destinataire && $destinataire->getEmail()) {
+                 try {
+                    $email = (new TemplatedEmail())
+                        ->from(new Address('no-reply@ticketflow.com', 'TicketFlow Notification'))
+                        ->to($destinataire->getEmail())
+                        ->subject('Nouvelle réponse sur le ticket #' . $ticket->getIdTicket())
+                        ->htmlTemplate('emails/ticket_responded.html.twig')
+                        ->context([
+                            'ticket' => $ticket,
+                            'message' => $message,
+                        ]);
+                    $mailer->send($email);
+                } catch (\Exception $e) {
+                    // Ignorer les erreurs d'envoi pour ne pas bloquer le chat
+                }
+            }
         }
 
         return $this->redirectToRoute('app_tick_show', ['id' => $ticket->getId()]);
@@ -231,7 +286,7 @@ final class TickController extends AbstractController
     }
 
     #[Route('/tick/close/{id}', name: 'app_tick_close')]
-    public function close(Ticket $ticket, EntityManagerInterface $entityManager): Response
+    public function close(Ticket $ticket, EntityManagerInterface $entityManager, MailerInterface $mailer): Response
     {
         // Security check: Only Admin or the Creator (if Agent) can close
         $isCreator = $ticket->getCreateur() === $this->getUser();
@@ -245,6 +300,24 @@ final class TickController extends AbstractController
         $ticket->setStatut('Résolu');
         $ticket->setDateMise(new \DateTime());
         $entityManager->flush();
+
+        // Notify Client
+        if ($ticket->getIdClient() && $ticket->getIdClient()->getEmail()) {
+            try {
+                $email = (new TemplatedEmail())
+                    ->from(new Address('no-reply@ticketflow.com', 'TicketFlow Ops'))
+                    ->to($ticket->getIdClient()->getEmail())
+                    ->subject('Votre ticket #' . $ticket->getIdTicket() . ' a été résolu')
+                    ->htmlTemplate('emails/ticket_status.html.twig')
+                    ->context([
+                        'user' => $ticket->getIdClient(),
+                        'ticket' => $ticket,
+                    ]);
+                $mailer->send($email);
+            } catch (\Exception $e) {
+                // Ignorer erreurs
+            }
+        }
 
         $this->addFlash('success', 'Le ticket a été marqué comme résolu.');
         return $this->redirectToRoute('app_tick_show', ['id' => $ticket->getId()]);
@@ -290,12 +363,29 @@ final class TickController extends AbstractController
     }
 
     #[Route('/tick/{id}/resoudre', name: 'app_tick_resoudre')]
-    public function resoudre(Ticket $ticket, EntityManagerInterface $entityManager): Response
+    public function resoudre(Ticket $ticket, EntityManagerInterface $entityManager, MailerInterface $mailer): Response
     {
         if ($this->isGranted('ROLE_AGENT') || $this->isGranted('ROLE_ADMIN')) {
             $ticket->setStatut('Résolu');
             $ticket->setDateMise(new \DateTime());
             $entityManager->flush();
+
+            if ($ticket->getIdClient() && $ticket->getIdClient()->getEmail()) {
+                try {
+                    $email = (new TemplatedEmail())
+                        ->from(new Address('no-reply@ticketflow.com', 'TicketFlow Ops'))
+                        ->to($ticket->getIdClient()->getEmail())
+                        ->subject('Votre ticket #' . $ticket->getIdTicket() . ' a été résolu')
+                        ->htmlTemplate('emails/ticket_status.html.twig')
+                        ->context([
+                            'user' => $ticket->getIdClient(),
+                            'ticket' => $ticket,
+                        ]);
+                    $mailer->send($email);
+                } catch (\Exception $e) {
+                    // Ignorer
+                }
+            }
         }
         return $this->redirectToRoute('app_tick');
     }

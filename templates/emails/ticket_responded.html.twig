@@ -1,0 +1,18 @@
+{% extends 'emails/base_email.html.twig' %}
+
+{% block body %}
+    <h2>Nouvelle réponse sur votre ticket</h2>
+    <p>Bonjour,</p>
+    
+    <p>Une nouvelle réponse a été postée sur le ticket <strong>#{{ ticket.idTicket }}</strong>.</p>
+    
+    <div class="info-box">
+        <strong>De :</strong> {{ message.idUtilisateur.prenom }} {{ message.idUtilisateur.nom }}<br>
+        <hr style="border: 0; border-top: 1px solid #dbeafe; margin: 10px 0;">
+        <p style="margin: 0; font-style: italic;">"{{ message.contenu }}"</p>
+    </div>
+
+    <center>
+        <a href="{{ url('app_tick_show', {'id': ticket.id}) }}" class="btn">Répondre</a>
+    </center>
+{% endblock %}

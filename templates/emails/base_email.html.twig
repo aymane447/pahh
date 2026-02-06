@@ -1,0 +1,31 @@
+{# templates/emails/base_email.html.twig #}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f3f4f6; margin: 0; padding: 0; }
+        .container { max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 0; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .header { background: linear-gradient(135deg, #38bdf8 0%, #2563eb 100%); padding: 30px; text-align: center; color: white; }
+        .header h1 { margin: 0; font-size: 24px; font-weight: 700; }
+        .content { padding: 30px; color: #1f2937; line-height: 1.6; }
+        .btn { display: inline-block; background-color: #2563eb; color: white; text-decoration: none; padding: 12px 24px; border-radius: 6px; font-weight: 600; margin-top: 20px; }
+        .footer { background-color: #f9fafb; padding: 20px; text-align: center; font-size: 12px; color: #6b7280; border-top: 1px solid #e5e7eb; }
+        .info-box { background-color: #eff6ff; border-left: 4px solid #2563eb; padding: 15px; margin: 20px 0; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>TicketFlow</h1>
+        </div>
+        <div class="content">
+            {% block body %}{% endblock %}
+        </div>
+        <div class="footer">
+            <p>&copy; {{ "now"|date("Y") }} TicketFlow. Tous droits réservés.</p>
+            <p>Cet email a été envoyé automatiquement, merci de ne pas y répondre.</p>
+        </div>
+    </div>
+</body>
+</html>

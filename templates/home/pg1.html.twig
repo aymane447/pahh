@@ -322,12 +322,21 @@
             <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
                 <div class="event-item h-100 d-flex flex-column">
                     <div class="d-flex align-items-center mb-3 px-1">
-                        <div class="creator-avatar rounded-circle bg-white d-flex align-items-center justify-content-center me-2 overflow-hidden" style="width: 24px; height: 24px;">
-                            <img src="https://ui-avatars.com/api/?name={{ event.createur.nom }}&background=fff&color=000&size=24" alt="Creator">
-                        </div>
-                        <span class="small fw-bold text-white text-uppercase" style="font-size: 0.75rem; letter-spacing: 0.5px; opacity: 0.9;">
-                            {{ event.createur.nom }}
-                        </span>
+                        {% if event.createur %}
+                            <div class="creator-avatar rounded-circle bg-white d-flex align-items-center justify-content-center me-2 overflow-hidden" style="width: 24px; height: 24px;">
+                                <img src="https://ui-avatars.com/api/?name={{ event.createur.nom }}&background=fff&color=000&size=24" alt="Creator">
+                            </div>
+                            <span class="small fw-bold text-white text-uppercase" style="font-size: 0.75rem; letter-spacing: 0.5px; opacity: 0.9;">
+                                {{ event.createur.nom }}
+                            </span>
+                        {% else %}
+                            <div class="creator-avatar rounded-circle bg-secondary d-flex align-items-center justify-content-center me-2 overflow-hidden" style="width: 24px; height: 24px;">
+                                <i class="fas fa-user text-white-50" style="font-size: 12px;"></i>
+                            </div>
+                            <span class="small fw-bold text-muted text-uppercase" style="font-size: 0.75rem; letter-spacing: 0.5px; opacity: 0.9;">
+                                Système
+                            </span>
+                        {% endif %}
                     </div>
 
                     <a href="{{ path('app_event_show', {'id': event.id}) }}" class="text-decoration-none flex-grow-1">
